@@ -1,0 +1,18 @@
+package Loghme.controllers;
+
+import Loghme.models.IeatRepository;
+import Loghme.models.Order;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/order")
+public class OrderController {
+
+    @GetMapping("/{orderId}")
+    public Order getOrder(@PathVariable("orderId") int orderId) {
+        return IeatRepository.getInstance().getOrderRepository().findOrderById(orderId);
+    }
+}
