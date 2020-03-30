@@ -2,6 +2,7 @@ package Loghme.models;
 
 import Loghme.Utilities.RequestApi;
 import Loghme.scheduler.HandleFoodPartyPeriodic;
+import Loghme.scheduler.HandleFoodPartyRemainingTime;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,6 +17,8 @@ public class IeatRepository {
     private ArrayList<Restaurant> restaurants;
     private Cart cart;
     private OrderRepository orderRepository;
+    private static int remainingTime;
+    private static int updatePeriod;
 
     private IeatRepository() {
         user = new User();
@@ -24,8 +27,11 @@ public class IeatRepository {
         orderId = 0;
         orderRepository = new OrderRepository();
         initDatabase();
+        updatePeriod = 20;
+        remainingTime = 20;
         requestFoodPartyData();
     }
+
 
     public int getOrderId() {
         return orderId;
@@ -56,7 +62,7 @@ public class IeatRepository {
     }
 
     public static IeatRepository getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new IeatRepository();
         return instance;
     }
@@ -67,14 +73,14 @@ public class IeatRepository {
             data = RequestApi.request("http://138.197.181.131:8080/restaurants");
             addRestaurants(data);
             setFoodsRestaurant();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("DataBase Initialized");
     }
 
     public void setFoodsRestaurant() {
-        for(Restaurant restaurant: restaurants) {
+        for (Restaurant restaurant : restaurants) {
             restaurant.setRestaurantIds();
             restaurant.setRestaurantNames();
         }
@@ -97,8 +103,8 @@ public class IeatRepository {
     }
 
     private boolean isAddedAlready(Restaurant newRestaurant) {
-        for(Restaurant restaurant: restaurants) {
-            if(restaurant.getName().equals(newRestaurant.getName())) {
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getName().equals(newRestaurant.getName())) {
                 return true;
             }
         }
@@ -107,7 +113,8 @@ public class IeatRepository {
 
     private Food findfood(String jsonInfo) {
         TypeReference<HashMap<String, String>> typeRef =
-                new TypeReference<HashMap<String, String>>() {};
+                new TypeReference<HashMap<String, String>>() {
+                };
         Map<String, String> map = null;
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -115,15 +122,15 @@ public class IeatRepository {
             String foodName = map.get("foodName");
             String restaurantName = map.get("restaurantName");
             for (Restaurant restaurant : restaurants) {
-                if(!restaurantName.equals(restaurant.getName()))
+                if (!restaurantName.equals(restaurant.getName()))
                     continue;
-                for(Food food : restaurant.getMenu()) {
+                for (Food food : restaurant.getMenu()) {
                     String currentFoodName = food.getName();
                     if (foodName.equals(food.getName()))
                         return food;
                 }
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -132,19 +139,20 @@ public class IeatRepository {
     private Map<String, String> jsonParse(String jsonData) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<HashMap<String, String>> typeRef =
-                new TypeReference<HashMap<String, String>>() {};
+                new TypeReference<HashMap<String, String>>() {
+                };
         Map<String, String> map = null;
         try {
             map = mapper.readValue(jsonData, typeRef);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return map;
     }
 
     public Restaurant findRestaurant(String name) {
-        for(Restaurant restaurant: restaurants) {
-            if(restaurant.getName().equals(name))
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getName().equals(name))
                 return restaurant;
         }
         return null;
@@ -152,16 +160,16 @@ public class IeatRepository {
 
     public ArrayList<Restaurant> findNearRestaurants(int distance) {
         ArrayList<Restaurant> nearRestaurants = new ArrayList<Restaurant>();
-        for(Restaurant restaurant: restaurants) {
-            if(restaurant.getLocation().getDistance(new Location(0 ,0)) <= distance)
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getLocation().getDistance(new Location(0, 0)) <= distance)
                 nearRestaurants.add(restaurant);
         }
         return nearRestaurants;
     }
 
     public Restaurant findRestaurantById(String id) {
-        for(Restaurant restaurant: restaurants) {
-            if(restaurant.getId().equals(id))
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getId().equals(id))
                 return restaurant;
         }
         return null;
@@ -169,7 +177,7 @@ public class IeatRepository {
 
     public boolean addToCart(String id, String foodName) {
         Restaurant restaurant = findRestaurantById(id);
-        if(restaurant == null)
+        if (restaurant == null)
             return false;
         System.out.println("restaurant found");
         Food food = restaurant.findFood(foodName);
@@ -177,7 +185,7 @@ public class IeatRepository {
             return false;
         System.out.println("food found");
 
-        if(cart.addFood(food))
+        if (cart.addFood(food))
             return true;
         else
             return false;
@@ -186,9 +194,10 @@ public class IeatRepository {
     private void addRestaurants(String data) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         List<Restaurant> newRestaurants = mapper.readValue(data,
-                new TypeReference<List<Restaurant>>(){});
-        for(Restaurant restaurant: newRestaurants) {
-            if(isAddedAlready(restaurant))
+                new TypeReference<List<Restaurant>>() {
+                });
+        for (Restaurant restaurant : newRestaurants) {
+            if (isAddedAlready(restaurant))
                 continue;
             restaurants.add(restaurant);
         }
@@ -200,33 +209,54 @@ public class IeatRepository {
     }
 
     public void requestFoodPartyData() {
+        TimerTask handleFoodPartyRemainingTime = new HandleFoodPartyRemainingTime();
+        Timer remainingtimer = new Timer();
+        remainingtimer.schedule(handleFoodPartyRemainingTime, 0, 1 * 1000); //every 300 secs
+
         TimerTask handleFoodPartyPeriodic = new HandleFoodPartyPeriodic(restaurants);
-        Timer timer = new Timer();
-        timer.schedule(handleFoodPartyPeriodic, 0, 18 * 10000); //every 300 secs
+        Timer requestTimer = new Timer();
+        requestTimer.schedule(handleFoodPartyPeriodic, 0, getUpdatePeriod() * 1000); //every 3 secs
     }
 
     public ArrayList<PartyFood> getParty() {
         ArrayList<PartyFood> ans = new ArrayList<PartyFood>();
-        for(Restaurant restaurant: restaurants) {
-            if(restaurant.getPartyMenu() == null)
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getPartyMenu() == null)
                 continue;
 
-            for(PartyFood food: restaurant.getPartyMenu())
+            for (PartyFood food : restaurant.getPartyMenu())
                 ans.add(food);
         }
         return ans;
     }
 
     public boolean finalizeCart() {
-        if(cart.getOrderItems().isEmpty())
+        if (cart.getOrderItems().isEmpty())
             return false;
         int finalPrice = cart.getFinalPrice();
-        if(finalPrice > user.getCredit())
+        if (finalPrice > user.getCredit())
             return false;
         user.decreaseCredit(finalPrice);
         Order newOrder = new Order(cart, findRestaurantById(cart.getRestaurantId()));
         orderRepository.addOrder(newOrder);
         cart = new Cart();
         return true;
+    }
+
+
+    public static int getUpdatePeriod() {
+        return updatePeriod;
+    }
+
+    public static int getRemainingTime() {
+        return remainingTime;
+    }
+
+    public static void resetRemainingTime() {
+        remainingTime = updatePeriod;
+    }
+
+    public static void decrementRemainingTime() {
+        remainingTime--;
     }
 }

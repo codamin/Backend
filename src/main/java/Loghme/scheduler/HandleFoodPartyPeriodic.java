@@ -1,6 +1,7 @@
 package Loghme.scheduler;
 
 import Loghme.Utilities.RequestApi;
+import Loghme.models.PartyFood;
 import Loghme.models.Restaurant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
+
+import static Loghme.models.IeatRepository.resetRemainingTime;
 
 public class HandleFoodPartyPeriodic extends TimerTask {
 

@@ -5,7 +5,6 @@ public class PartyFood extends Food {
     private int count;
     private int oldPrice;
 
-
     public int getOldPrice() {
         return oldPrice;
     }
