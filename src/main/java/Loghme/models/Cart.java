@@ -55,6 +55,15 @@ public class Cart {
         return null;
     }
 
+    public OrderItem getOrderItem(String restaurantId, String foodName) {
+        for(OrderItem item: orderItems)
+            if(item.getFood().getRestaurantId().equals(restaurantId) && item.getFood().getName().equals(foodName))
+                return item;
+        OrderItem respItem = new OrderItem(null);
+        respItem.setNumber(0);
+        return respItem ;
+    }
+
     public void incrementOrder(Food food) {
         OrderItem orderItem = findOrderItemByFood(food);
         orderItem.setNumber(orderItem.getNumber()+1);

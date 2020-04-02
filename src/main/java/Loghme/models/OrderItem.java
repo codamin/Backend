@@ -26,6 +26,8 @@ public class OrderItem {
     }
 
     public int getPrice() {
+        if (food==null)
+                return 0;
         return number * food.getPrice();
     }
 }
