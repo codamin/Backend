@@ -16,6 +16,11 @@ public class PartyFood extends Food {
     @Override
     public void decrement() {count -= 1; }
 
+    @Override
+    public void increment() {
+        count += 1;
+    }
+
     public int getCount() {
         return count;
     }

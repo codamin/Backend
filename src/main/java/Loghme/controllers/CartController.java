@@ -2,6 +2,8 @@ package Loghme.controllers;
 
 import Loghme.models.Cart;
 import Loghme.models.IeatRepository;
+import Loghme.requests.AddToCart;
+import Loghme.requests.DeleteFromCart;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,9 +15,14 @@ public class CartController {
         return IeatRepository.getInstance().getCart();
     }
 
-    @PostMapping("/{restaurantId}/{foodName}/add")
-    public void addToCart(@PathVariable("restaurantId") String restaurantId, @PathVariable("foodName") String foodName) {
-        IeatRepository.getInstance().addToCart(restaurantId, foodName);
+    @PostMapping()
+    public void addToCart(@RequestBody AddToCart req) {
+        IeatRepository.getInstance().addToCart(req.getRestaurantId(), req.getFoodName());
+    }
+
+    @DeleteMapping()
+    public void deleteFromCart(@RequestBody DeleteFromCart req) {
+        IeatRepository.getInstance().deleteFromCart(req.getRestaurantId(), req.getFoodName());
     }
 
 }

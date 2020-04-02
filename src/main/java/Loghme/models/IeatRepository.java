@@ -186,20 +186,28 @@ public class IeatRepository {
         return restaurant;
     }
 
-    public boolean addToCart(String id, String foodName) {
+    public void addToCart(String id, String foodName) {
         Restaurant restaurant = findRestaurantById(id);
         if (restaurant == null)
-            return false;
-        System.out.println("restaurant found");
+            throw new NotFoundException("Restaurant Not Found");
+
         Food food = restaurant.findFood(foodName);
         if (food == null)
-            return false;
-        System.out.println("food found");
+            throw new NotFoundException("Food Not Found");
 
-        if (cart.addFood(food))
-            return true;
-        else
-            return false;
+        cart.addFood(food);
+    }
+
+    public void deleteFromCart(String id, String foodName) {
+        Restaurant restaurant = findRestaurantById(id);
+        if (restaurant == null)
+            throw new NotFoundException("Restaurant Not Found");
+
+        Food food = restaurant.findFood(foodName);
+        if (food == null)
+            throw new NotFoundException("Food Not Found");
+
+        cart.deleteFood(food);
     }
 
     private void addRestaurants(String data) throws IOException {

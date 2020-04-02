@@ -13,6 +13,10 @@ public class Food {
         System.out.println("failed dec called ;((");
     }
 
+    public void increment() {
+        System.out.println("failed dec called ;((");
+    }
+
     public String getRestaurantId() {
         return restaurantId;
     }

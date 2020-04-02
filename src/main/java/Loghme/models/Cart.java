@@ -1,5 +1,6 @@
 package Loghme.models;
 
+import Loghme.exceptions.ForbiddenException;
 import java.util.ArrayList;
 
 public class Cart {
@@ -47,12 +48,21 @@ public class Cart {
         return false;
     }
 
+    private OrderItem findOrderItemByFood(Food food) {
+        for(OrderItem item: orderItems)
+            if(item.getFood().getName().equals(food.getName()))
+                return item;
+        return null;
+    }
+
     public void incrementOrder(Food food) {
-        for(int i = 0; i < orderItems.size(); i++) {
-            if(orderItems.get(i).getFood().getName().equals(food.getName())) {
-                orderItems.get(i).setNumber(orderItems.get(i).getNumber() + 1);
-            }
-        }
+        OrderItem orderItem = findOrderItemByFood(food);
+        orderItem.setNumber(orderItem.getNumber()+1);
+    }
+
+    public void decrementOrder(Food food) {
+        OrderItem orderItem = findOrderItemByFood(food);
+        orderItem.setNumber(orderItem.getNumber()-1);
     }
 
     public void clear() {
@@ -67,14 +77,13 @@ public class Cart {
         return true;
     }
 
-    public boolean addFood(Food food) {
+    public void addFood(Food food) {
 
         if(!checkFoodRestaurant(food.getRestaurantId()))
-            return false;
+            throw new ForbiddenException("Restaurant Does Not Match The Other Foods In The Cart");
 
         if(!food.isAvailable())
-            return false;
-
+            throw new ForbiddenException("Food Is Not Available");
 
         if(has(food)) {
             this.incrementOrder(food);
@@ -89,7 +98,17 @@ public class Cart {
             orderItems.add(newOrderItem);
             food.decrement();
         }
-        return true;
+        return;
+    }
+
+    public void deleteFood(Food food) {
+        if(!checkFoodRestaurant(food.getRestaurantId()))
+            throw new ForbiddenException("Food Not Found In Cart");
+
+        if(has(food)) {
+            this.decrementOrder(food);
+            food.increment();
+        }
     }
 
     public int getFinalPrice() {
