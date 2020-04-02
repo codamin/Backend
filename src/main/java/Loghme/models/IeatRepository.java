@@ -19,8 +19,8 @@ public class IeatRepository {
     private ArrayList<Restaurant> restaurants;
     private Cart cart;
     private OrderRepository orderRepository;
-    private static int remainingTime;
-    private static int updatePeriod;
+    private FoodPartyTimer foodPartyTimer;
+
 
     private IeatRepository() {
         user = new User();
@@ -29,8 +29,7 @@ public class IeatRepository {
         orderId = 0;
         orderRepository = new OrderRepository();
         initDatabase();
-        updatePeriod = 20;
-        remainingTime = 20;
+        foodPartyTimer = FoodPartyTimer.getInstance();
         requestFoodPartyData();
     }
 
@@ -228,13 +227,10 @@ public class IeatRepository {
     }
 
     public void requestFoodPartyData() {
-        TimerTask handleFoodPartyRemainingTime = new HandleFoodPartyRemainingTime();
-        Timer remainingtimer = new Timer();
-        remainingtimer.schedule(handleFoodPartyRemainingTime, 0, 1 * 1000); //every 300 secs
-
+        foodPartyTimer.startTimer();
         TimerTask handleFoodPartyPeriodic = new HandleFoodPartyPeriodic(restaurants);
         Timer requestTimer = new Timer();
-        requestTimer.schedule(handleFoodPartyPeriodic, 0, getUpdatePeriod() * 1000); //every 3 secs
+        requestTimer.schedule(handleFoodPartyPeriodic, 0, foodPartyTimer.getUpdatePeriod() * 1000); //every 3 secs
     }
 
     public ArrayList<PartyFood> getParty() {
@@ -260,22 +256,5 @@ public class IeatRepository {
         orderRepository.addOrder(newOrder);
         cart = new Cart();
         return true;
-    }
-
-
-    public static int getUpdatePeriod() {
-        return updatePeriod;
-    }
-
-    public static int getRemainingTime() {
-        return remainingTime;
-    }
-
-    public static void resetRemainingTime() {
-        remainingTime = updatePeriod;
-    }
-
-    public static void decrementRemainingTime() {
-        remainingTime--;
     }
 }

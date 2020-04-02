@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
-import static Loghme.models.IeatRepository.resetRemainingTime;
-
 public class HandleFoodPartyPeriodic extends TimerTask {
 
     ArrayList<Restaurant> restaurants;
