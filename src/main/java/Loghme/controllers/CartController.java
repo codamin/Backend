@@ -13,7 +13,7 @@ public class CartController {
         return IeatRepository.getInstance().getCart();
     }
 
-    @PostMapping("/add/{restaurantId}/{foodName}")
+    @PostMapping("/{restaurantId}/{foodName}/add")
     public void addToCart(@PathVariable("restaurantId") String restaurantId, @PathVariable("foodName") String foodName) {
         IeatRepository.getInstance().addToCart(restaurantId, foodName);
     }

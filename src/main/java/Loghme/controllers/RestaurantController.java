@@ -20,7 +20,7 @@ public class RestaurantController {
 
     @GetMapping("/{restaurantId}")
     public Restaurant getRestaurant(@PathVariable("restaurantId") String restaurantId) {
-        return IeatRepository.getInstance().findRestaurantById(restaurantId);
+        return IeatRepository.getInstance().getRestaurantById(restaurantId);
     }
 
 }

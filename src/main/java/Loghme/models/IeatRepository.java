@@ -1,6 +1,8 @@
 package Loghme.models;
 
 import Loghme.Utilities.RequestApi;
+import Loghme.exceptions.ForbiddenException;
+import Loghme.exceptions.NotFoundException;
 import Loghme.scheduler.HandleFoodPartyPeriodic;
 import Loghme.scheduler.HandleFoodPartyRemainingTime;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -173,6 +175,15 @@ public class IeatRepository {
                 return restaurant;
         }
         return null;
+    }
+
+    public Restaurant getRestaurantById(String id) {
+        Restaurant restaurant = this.findRestaurantById(id);
+        if (restaurant == null)
+            throw new NotFoundException("Restaurant Not Found");
+        if (restaurant.getLocation().getDistance(new Location(0, 0)) > 170)
+            throw new ForbiddenException("The Restaurant Does Not Service In Your Region");
+        return restaurant;
     }
 
     public boolean addToCart(String id, String foodName) {
