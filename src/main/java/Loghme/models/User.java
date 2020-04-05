@@ -6,6 +6,35 @@ public class User {
     private String phone;
     private String email;
     private int credit;
+    private OrderRepository orderRepository;
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setCredit(int credit) {
+        this.credit = credit;
+    }
+
+    public OrderRepository getOrderRepository() {
+        return orderRepository;
+    }
+
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     public User() {
         firstName = new String("Ehsan");
@@ -13,6 +42,7 @@ public class User {
         phone = new String("09124820194");
         email = new String("ekhamespanah@yahoo.com");
         credit = 10000;
+        orderRepository = new OrderRepository();
     }
 
     public String getFirstName() {

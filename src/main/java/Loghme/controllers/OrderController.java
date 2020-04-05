@@ -13,6 +13,6 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     public Order getOrder(@PathVariable("orderId") int orderId) {
-        return IeatRepository.getInstance().getOrderRepository().findOrderById(orderId);
+        return IeatRepository.getInstance().getUser().getOrderRepository().findOrderById(orderId);
     }
 }

@@ -18,7 +18,7 @@ public class IeatRepository {
     private User user;
     private ArrayList<Restaurant> restaurants;
     private Cart cart;
-    private OrderRepository orderRepository;
+//    private OrderRepository orderRepository;
     private FoodPartyTimer foodPartyTimer;
 
 
@@ -31,7 +31,7 @@ public class IeatRepository {
         restaurants = new ArrayList<Restaurant>();
         cart = new Cart();
         orderId = 0;
-        orderRepository = new OrderRepository();
+//        orderRepository = new OrderRepository();
         initDatabase();
         foodPartyTimer = FoodPartyTimer.getInstance();
         requestFoodPartyData();
@@ -45,9 +45,9 @@ public class IeatRepository {
         this.orderId = orderId;
     }
 
-    public OrderRepository getOrderRepository() {
-        return orderRepository;
-    }
+//    public OrderRepository getOrderRepository() {
+//        return orderRepository;
+//    }
 
     public void setRestaurants(ArrayList<Restaurant> restaurants) {
         this.restaurants = restaurants;
@@ -61,9 +61,9 @@ public class IeatRepository {
         this.cart = cart;
     }
 
-    public ArrayList<Order> getOrders() {
-        return orderRepository.getOrders();
-    }
+//    public ArrayList<Order> getOrders() {
+//        return orderRepository.getOrders();
+//    }
 
     public static IeatRepository getInstance() {
         if (instance == null)
@@ -248,16 +248,15 @@ public class IeatRepository {
         return ans;
     }
 
-    public boolean finalizeCart() {
+    public void finalizeCart() {
         if (cart.getOrderItems().isEmpty())
-            return false;
+            throw new ForbiddenException("No Order In Cart To Be Finzalized");
         int finalPrice = cart.getFinalPrice();
         if (finalPrice > user.getCredit())
-            return false;
+            throw new ForbiddenException("Not Enough Credit To Finalize The Cart");
         user.decreaseCredit(finalPrice);
         Order newOrder = new Order(cart, findRestaurantById(cart.getRestaurantId()));
-        orderRepository.addOrder(newOrder);
+        user.getOrderRepository().addOrder(newOrder);
         cart = new Cart();
-        return true;
     }
 }

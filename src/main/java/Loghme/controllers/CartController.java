@@ -31,4 +31,9 @@ public class CartController {
         IeatRepository.getInstance().deleteFromCart(req.getRestaurantId(), req.getFoodName());
     }
 
+    @PostMapping("/finalize")
+    public void finalizeCart() {
+        IeatRepository.getInstance().finalizeCart();
+    }
+
 }
