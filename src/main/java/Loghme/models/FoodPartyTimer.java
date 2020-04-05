@@ -6,8 +6,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FoodPartyTimer {
-    private static int remainingTime;
-    private static int updatePeriod;
+    private int remainingTime;
+    private int updatePeriod;
     private static FoodPartyTimer instance;
 
     public static FoodPartyTimer getInstance() {
@@ -19,21 +19,21 @@ public class FoodPartyTimer {
         updatePeriod = 20;
         remainingTime = 20;
     }
-    public static int getUpdatePeriod() {
+    public int getUpdatePeriod() {
         return updatePeriod;
     }
-    public static int getRemainingTime() {
+    public int getRemainingTime() {
         return remainingTime;
     }
-    public static void resetRemainingTime() {
+    public void resetRemainingTime() {
         remainingTime = updatePeriod;
     }
-    public static void decrementRemainingTime() {
+    public void decrementRemainingTime() {
         remainingTime--;
     }
-    public static void startTimer() {
+    public void startTimer() {
         TimerTask handleFoodPartyRemainingTime = new HandleFoodPartyRemainingTime();
-        Timer remainingtimer = new Timer();
-        remainingtimer.schedule(handleFoodPartyRemainingTime, 0, 1 * 1000); //every 300 secs
+        Timer remainingTimer = new Timer();
+        remainingTimer.schedule(handleFoodPartyRemainingTime, 0, 1 * 1000); //every 300 secs
     }
 }

@@ -1,6 +1,7 @@
 package Loghme.controllers;
 
 import Loghme.models.Food;
+import Loghme.models.FoodPartyTimer;
 import Loghme.models.IeatRepository;
 import Loghme.models.PartyFood;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,11 @@ public class PartyController {
     @GetMapping
     public ArrayList<PartyFood> getParty() {
         return IeatRepository.getInstance().getParty();
+    }
+
+    @GetMapping("/time")
+    public FoodPartyTimer getTime() {
+        return IeatRepository.getInstance().getFoodPartyTimer().getInstance();
     }
 
 }

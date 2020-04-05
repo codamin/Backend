@@ -6,7 +6,7 @@ public class HandleFoodPartyRemainingTime extends TimerTask {
     @Override
     public void run() {
         System.out.println(FoodPartyTimer.getInstance().getRemainingTime());
-        FoodPartyTimer.decrementRemainingTime();
+        FoodPartyTimer.getInstance().decrementRemainingTime();
         if (FoodPartyTimer.getInstance().getRemainingTime() == 0)
             FoodPartyTimer.getInstance().resetRemainingTime();
     }

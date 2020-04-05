@@ -22,6 +22,10 @@ public class IeatRepository {
     private FoodPartyTimer foodPartyTimer;
 
 
+    public FoodPartyTimer getFoodPartyTimer() {
+        return foodPartyTimer;
+    }
+
     private IeatRepository() {
         user = new User();
         restaurants = new ArrayList<Restaurant>();
@@ -32,7 +36,6 @@ public class IeatRepository {
         foodPartyTimer = FoodPartyTimer.getInstance();
         requestFoodPartyData();
     }
-
 
     public int getOrderId() {
         return orderId;
