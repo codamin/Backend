@@ -1,5 +1,7 @@
 package Loghme.models;
 
+import Loghme.exceptions.ForbiddenException;
+
 public class User {
     private String firstName;
     private String lastName;
@@ -66,6 +68,9 @@ public class User {
     }
 
     public void chargeCredit(int amount) {
+        if(amount <= 0) {
+            throw new ForbiddenException("the entered amount is not acceptable");
+        }
         credit += amount;
     }
 
