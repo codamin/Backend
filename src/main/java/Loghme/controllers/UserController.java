@@ -2,9 +2,8 @@ package Loghme.controllers;
 
 import Loghme.models.IeatRepository;
 import Loghme.models.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import Loghme.requests.AddCredit;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -13,6 +12,13 @@ public class UserController {
     @GetMapping
     public User getUser() {
         return IeatRepository.getInstance().getUser();
+    }
+
+    @PostMapping
+    public void addCredit(@RequestBody AddCredit req) {
+        System.out.println("here");
+        System.out.println(req.getCredit());
+        IeatRepository.getInstance().getUser().chargeCredit(req.getCredit());
     }
 
 }

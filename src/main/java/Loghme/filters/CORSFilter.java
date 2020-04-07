@@ -11,6 +11,12 @@ public class CORSFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
 
+        try {
+            Thread.sleep(850);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", "*");
