@@ -66,6 +66,7 @@ public class IeatRepository {
 //    }
 
     public static IeatRepository getInstance() {
+        System.out.println("getInstance called :)");
         if (instance == null)
             instance = new IeatRepository();
         return instance;

@@ -43,7 +43,7 @@ public class User {
         lastName = new String("KhamesPanah");
         phone = new String("09124820194");
         email = new String("ekhamespanah@yahoo.com");
-        credit = 10000;
+        credit = 100000;
         orderRepository = new OrderRepository();
     }
 
