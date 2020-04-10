@@ -79,4 +79,13 @@ public class Order {
     public void setRemSec(int remSec) {
         this.remSec = remSec;
     }
+
+    public int getFinalPrice() {
+        int price = 0;
+
+        for(OrderItem orderItem : orderItems)
+            price += orderItem.getPrice();
+
+        return price;
+    }
 }
