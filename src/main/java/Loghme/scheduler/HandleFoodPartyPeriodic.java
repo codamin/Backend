@@ -35,14 +35,13 @@ public class HandleFoodPartyPeriodic extends TimerTask {
         }
     }
 
-    private void clearPreviosFoodParty() {
+    private void clearPreviousFoodParty() {
         for(Restaurant restaurant: restaurants)
-            restaurant.getPartyMenu().clear();
+            restaurant.outDatePartyMenu();
     }
 
     private void updateDataParty(String data) throws IOException {
-        clearPreviosFoodParty();
-
+        clearPreviousFoodParty();
         ObjectMapper mapper = new ObjectMapper();
         List<Restaurant> newRestaurants = mapper.readValue(data, new TypeReference<List<Restaurant>>(){});
         for(Restaurant restaurant: newRestaurants) {

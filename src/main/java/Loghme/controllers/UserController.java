@@ -16,8 +16,6 @@ public class UserController {
 
     @PostMapping
     public void addCredit(@RequestBody AddCredit req) {
-        System.out.println("here");
-        System.out.println(req.getCredit());
         IeatRepository.getInstance().getUser().chargeCredit(req.getCredit());
     }
 

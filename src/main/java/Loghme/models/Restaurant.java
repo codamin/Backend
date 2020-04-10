@@ -1,5 +1,7 @@
 package Loghme.models;
 
+import org.springframework.http.codec.multipart.Part;
+
 import java.util.ArrayList;
 
 public class Restaurant {
@@ -137,7 +139,24 @@ public class Restaurant {
     }
 
     public void updateParty(ArrayList<PartyFood> newParty) {
-        partyMenu.clear();
-        partyMenu = newParty;
+        for(PartyFood newFood: newParty) {
+            boolean found = false;
+            for(PartyFood food: partyMenu) {
+                if(food.getName() == newFood.getName()) {
+                    food = newFood;
+                    food.setAvailable(true);
+                    found = true;
+                    continue;
+                }
+            }
+            if(!found) {
+                partyMenu.add(newFood);
+            }
+        }
+    }
+
+    public void outDatePartyMenu() {
+        for(PartyFood food: partyMenu)
+            food.setAvailable(false);
     }
 }

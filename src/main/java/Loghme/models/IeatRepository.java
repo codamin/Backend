@@ -192,11 +192,15 @@ public class IeatRepository {
     public void addToCart(String id, String foodName, int num) {
         Restaurant restaurant = findRestaurantById(id);
         if (restaurant == null)
-            throw new NotFoundException("Restaurant Not Found");
+            throw new NotFoundException("Restaurant Is Not Valid");
 
         Food food = restaurant.findFood(foodName);
         if (food == null)
-            throw new NotFoundException("Food Not Found");
+            throw new NotFoundException("Food does not seem valid");
+
+        if (!food.getAvailable()) {
+            throw new ForbiddenException("The food have been expired.");
+        }
         for(int i=0; i<num; i++) {
             cart.addFood(food);
         }
@@ -205,11 +209,11 @@ public class IeatRepository {
     public void deleteFromCart(String id, String foodName) {
         Restaurant restaurant = findRestaurantById(id);
         if (restaurant == null)
-            throw new NotFoundException("Restaurant Not Found");
+            throw new NotFoundException("Restaurant not found");
 
         Food food = restaurant.findFood(foodName);
         if (food == null)
-            throw new NotFoundException("Food Not Found");
+            throw new NotFoundException("Food not found");
 
         cart.deleteFood(food);
     }
@@ -243,9 +247,10 @@ public class IeatRepository {
         for (Restaurant restaurant : restaurants) {
             if (restaurant.getPartyMenu() == null)
                 continue;
-
-            for (PartyFood food : restaurant.getPartyMenu())
-                ans.add(food);
+            for (PartyFood food : restaurant.getPartyMenu()) {
+                if(food.getAvailable())
+                    ans.add(food);
+            }
         }
         return ans;
     }

@@ -8,6 +8,7 @@ public class Food {
     private String image;
     private String restaurantName;
     private String restaurantId;
+    private boolean available = true;
 
     public void decrement() {
         System.out.println("failed dec called ;((");
@@ -74,5 +75,14 @@ public class Food {
 
     public boolean isAvailable() {return true;}
 
+    public void setCount(int count) {}
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public boolean getAvailable() {
+        return this.available;
+    }
 }
 

@@ -92,10 +92,10 @@ public class Cart {
     public void addFood(Food food) {
 
         if(!checkFoodRestaurant(food.getRestaurantId()))
-            throw new ForbiddenException("Restaurant Does Not Match The Other Foods In The Cart");
+            throw new ForbiddenException("Restaurant of the food is not similar to the others");
 
         if(!food.isAvailable())
-            throw new ForbiddenException("Food Is Not Available");
+            throw new ForbiddenException("the food has been finished");
 
         if(has(food)) {
             this.incrementOrder(food);
@@ -115,7 +115,7 @@ public class Cart {
 
     public void deleteFood(Food food) {
         if(!checkFoodRestaurant(food.getRestaurantId()))
-            throw new ForbiddenException("Food Not Found In Cart");
+            throw new ForbiddenException("The food is not in cart to be removed");
 
         if(has(food)) {
             this.decrementOrder(food);

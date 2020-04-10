@@ -25,6 +25,7 @@ public class PartyFood extends Food {
         return count;
     }
 
+    @Override
     public void setCount(int count) {
         this.count = count;
     }
