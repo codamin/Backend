@@ -4,6 +4,7 @@ package Loghme.requests;
 public class AddToCart {
     private String restaurantId;
     private String foodName;
+    private int num;
 
     public AddToCart() {}
 
@@ -21,5 +22,13 @@ public class AddToCart {
 
     public void setFoodName(String foodName) {
         this.foodName = foodName;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 }

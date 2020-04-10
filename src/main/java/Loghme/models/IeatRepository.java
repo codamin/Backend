@@ -189,7 +189,7 @@ public class IeatRepository {
         return restaurant;
     }
 
-    public void addToCart(String id, String foodName) {
+    public void addToCart(String id, String foodName, int num) {
         Restaurant restaurant = findRestaurantById(id);
         if (restaurant == null)
             throw new NotFoundException("Restaurant Not Found");
@@ -197,8 +197,9 @@ public class IeatRepository {
         Food food = restaurant.findFood(foodName);
         if (food == null)
             throw new NotFoundException("Food Not Found");
-
-        cart.addFood(food);
+        for(int i=0; i<num; i++) {
+            cart.addFood(food);
+        }
     }
 
     public void deleteFromCart(String id, String foodName) {

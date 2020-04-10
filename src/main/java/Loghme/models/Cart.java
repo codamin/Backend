@@ -72,6 +72,9 @@ public class Cart {
     public void decrementOrder(Food food) {
         OrderItem orderItem = findOrderItemByFood(food);
         orderItem.setNumber(orderItem.getNumber()-1);
+        if(orderItem.getNumber() <= 0) {
+            orderItems.remove(orderItem);
+        }
     }
 
     public void clear() {

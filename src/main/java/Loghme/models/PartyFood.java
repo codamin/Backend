@@ -20,7 +20,7 @@ public class PartyFood extends Food {
     public void increment() {
         count += 1;
     }
-
+        
     public int getCount() {
         return count;
     }

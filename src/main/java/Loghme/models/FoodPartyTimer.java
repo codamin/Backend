@@ -16,8 +16,8 @@ public class FoodPartyTimer {
         return instance;
     }
     public FoodPartyTimer() {
-        updatePeriod = 20;
-        remainingTime = 20;
+        updatePeriod = 60;
+        remainingTime = 60;
     }
     public int getUpdatePeriod() {
         return updatePeriod;

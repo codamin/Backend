@@ -23,7 +23,7 @@ public class CartController {
 
     @PostMapping()
     public void addToCart(@RequestBody AddToCart req) {
-        IeatRepository.getInstance().addToCart(req.getRestaurantId(), req.getFoodName());
+        IeatRepository.getInstance().addToCart(req.getRestaurantId(), req.getFoodName(), req.getNum());
     }
 
     @DeleteMapping()

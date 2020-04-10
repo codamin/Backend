@@ -73,5 +73,6 @@ public class Food {
     }
 
     public boolean isAvailable() {return true;}
+
 }
 
