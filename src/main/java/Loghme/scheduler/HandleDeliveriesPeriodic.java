@@ -1,9 +1,9 @@
 package Loghme.scheduler;
 
 import Loghme.Utilities.RequestApi;
-import Loghme.models.Delivery;
-import Loghme.models.Location;
-import Loghme.models.Order;
+import Loghme.entities.Delivery;
+import Loghme.entities.Location;
+import Loghme.entities.Order;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

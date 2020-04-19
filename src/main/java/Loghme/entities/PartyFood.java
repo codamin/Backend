@@ -1,4 +1,4 @@
-package Loghme.models;
+package Loghme.entities;
 
 
 public class PartyFood extends Food {

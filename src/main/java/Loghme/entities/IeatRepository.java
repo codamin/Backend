@@ -1,10 +1,9 @@
-package Loghme.models;
+package Loghme.entities;
 
 import Loghme.Utilities.RequestApi;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.exceptions.NotFoundException;
 import Loghme.scheduler.HandleFoodPartyPeriodic;
-import Loghme.scheduler.HandleFoodPartyRemainingTime;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mchange.v2.c3p0.ComboPooledDataSource;

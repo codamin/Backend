@@ -1,4 +1,4 @@
-package Loghme.models;
+package Loghme.entities;
 
 import Loghme.scheduler.HandleFoodPartyRemainingTime;
 

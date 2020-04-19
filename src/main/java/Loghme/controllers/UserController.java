@@ -1,7 +1,7 @@
 package Loghme.controllers;
 
-import Loghme.models.IeatRepository;
-import Loghme.models.User;
+import Loghme.entities.IeatRepository;
+import Loghme.entities.User;
 import Loghme.requests.AddCredit;
 import org.springframework.web.bind.annotation.*;
 

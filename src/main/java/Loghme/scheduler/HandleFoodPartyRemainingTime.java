@@ -1,5 +1,5 @@
 package Loghme.scheduler;
-import Loghme.models.FoodPartyTimer;
+import Loghme.entities.FoodPartyTimer;
 import java.util.TimerTask;
 
 public class HandleFoodPartyRemainingTime extends TimerTask {

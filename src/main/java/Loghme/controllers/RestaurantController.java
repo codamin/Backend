@@ -1,7 +1,7 @@
 package Loghme.controllers;
 
-import Loghme.models.IeatRepository;
-import Loghme.models.Restaurant;
+import Loghme.entities.IeatRepository;
+import Loghme.entities.Restaurant;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

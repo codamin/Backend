@@ -1,6 +1,4 @@
-package Loghme.models;
-
-import org.springframework.http.codec.multipart.Part;
+package Loghme.entities;
 
 import java.util.ArrayList;
 

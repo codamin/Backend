@@ -1,6 +1,6 @@
 package Loghme.Utilities;
 
-import Loghme.models.IeatRepository;
+import Loghme.entities.IeatRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

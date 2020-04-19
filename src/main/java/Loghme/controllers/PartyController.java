@@ -1,9 +1,8 @@
 package Loghme.controllers;
 
-import Loghme.models.Food;
-import Loghme.models.FoodPartyTimer;
-import Loghme.models.IeatRepository;
-import Loghme.models.PartyFood;
+import Loghme.entities.FoodPartyTimer;
+import Loghme.entities.IeatRepository;
+import Loghme.entities.PartyFood;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

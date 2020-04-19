@@ -1,6 +1,6 @@
 package Loghme.scheduler;
 
-import Loghme.models.Order;
+import Loghme.entities.Order;
 
 import java.util.TimerTask;
 

@@ -1,10 +1,11 @@
 package Loghme.controllers;
 
-import Loghme.models.Cart;
-import Loghme.models.IeatRepository;
-import Loghme.models.OrderItem;
+import Loghme.entities.Cart;
+import Loghme.entities.IeatRepository;
+import Loghme.entities.OrderItem;
 import Loghme.requests.AddToCart;
 import Loghme.requests.DeleteFromCart;
+import Loghme.services.CartService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,22 +19,22 @@ public class CartController {
 
     @GetMapping("/{restaurantId}/{foodName}")
     public OrderItem getOrderItem(@PathVariable("restaurantId") String restaurantId, @PathVariable("foodName") String foodName) {
-        return IeatRepository.getInstance().getCart().getOrderItem(restaurantId, foodName);
+        return CartService.getOrderItem(restaurantId, foodName);
     }
 
     @PostMapping()
     public void addToCart(@RequestBody AddToCart req) {
-        IeatRepository.getInstance().addToCart(req.getRestaurantId(), req.getFoodName(), req.getNum());
+        CartService.addToCart(req.getRestaurantId(), req.getFoodName(), req.getNum());
     }
 
     @DeleteMapping()
     public void deleteFromCart(@RequestBody DeleteFromCart req) {
-        IeatRepository.getInstance().deleteFromCart(req.getRestaurantId(), req.getFoodName());
+        CartService.deleteFromCart(req.getRestaurantId(), req.getFoodName());
     }
 
     @PostMapping("/finalize")
     public void finalizeCart() {
-        IeatRepository.getInstance().finalizeCart();
+        CartService.finalizeCart();
     }
 
 }

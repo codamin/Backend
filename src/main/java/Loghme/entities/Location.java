@@ -1,4 +1,4 @@
-package Loghme.models;
+package Loghme.entities;
 
 import static java.lang.StrictMath.sqrt;
 

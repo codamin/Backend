@@ -1,8 +1,7 @@
 package Loghme.scheduler;
 
 import Loghme.Utilities.RequestApi;
-import Loghme.models.PartyFood;
-import Loghme.models.Restaurant;
+import Loghme.entities.Restaurant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
