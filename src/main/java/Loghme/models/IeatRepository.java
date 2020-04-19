@@ -7,6 +7,7 @@ import Loghme.scheduler.HandleFoodPartyPeriodic;
 import Loghme.scheduler.HandleFoodPartyRemainingTime;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import java.io.IOException;
 import java.util.*;
@@ -21,20 +22,38 @@ public class IeatRepository {
 //    private OrderRepository orderRepository;
     private FoodPartyTimer foodPartyTimer;
 
-
-    public FoodPartyTimer getFoodPartyTimer() {
-        return foodPartyTimer;
-    }
+    ComboPooledDataSource dataSource;
 
     private IeatRepository() {
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        dataSource = new ComboPooledDataSource();
+        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/Loghme");
+        dataSource.setUser("ie");
+        dataSource.setPassword("iePass@2020");
+
+        dataSource.setInitialPoolSize(5);
+        dataSource.setMinPoolSize(5);
+        dataSource.setAcquireIncrement(5);
+        dataSource.setMaxPoolSize(20);
+        dataSource.setMaxStatements(100);
+
         user = new User();
         restaurants = new ArrayList<Restaurant>();
         cart = new Cart();
         orderId = 0;
 //        orderRepository = new OrderRepository();
         initDatabase();
-        foodPartyTimer = FoodPartyTimer.getInstance();
         requestFoodPartyData();
+    }
+
+    public FoodPartyTimer getFoodPartyTimer() {
+        return foodPartyTimer;
     }
 
     public int getOrderId() {
@@ -44,10 +63,6 @@ public class IeatRepository {
     public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
-
-//    public OrderRepository getOrderRepository() {
-//        return orderRepository;
-//    }
 
     public void setRestaurants(ArrayList<Restaurant> restaurants) {
         this.restaurants = restaurants;
@@ -60,10 +75,6 @@ public class IeatRepository {
     public void setCart(Cart cart) {
         this.cart = cart;
     }
-
-//    public ArrayList<Order> getOrders() {
-//        return orderRepository.getOrders();
-//    }
 
     public static IeatRepository getInstance() {
         System.out.println("getInstance called :)");
