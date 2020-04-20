@@ -23,40 +23,34 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
 
     private RestaurantMapper() throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement createTableStatement = con.prepareStatement("CREATE TABLE IF NOT EXISTS restaurant (id CHAR,\n" +
-                "name CHAR CHARACTER SET utf8 COLLATE utf8_unicode_ci,\n" +
-                "location_x INTEGER,\n" +
-                "location_y INTEGER, \n" +
-                "logo CHAR,\n");
+        String query = "CREATE TABLE IF NOT EXISTS restaurant (" +
+                            "id VARCHAR(200)," +
+                            "name VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
+                            "location_x INTEGER," +
+                            "location_y INTEGER," +
+                            "logo VARCHAR(200));";
+        PreparedStatement createTableStatement = con.prepareStatement(query);
+        System.out.println(query);
+        createTableStatement.executeUpdate();
+        createTableStatement.close();
+        con.close();
     }
 
     public static RestaurantMapper getInstance() {
-        System.out.println("restaurant mapper getInstance called");
         return instance;
     }
 
     public boolean insert(Restaurant restaurant) throws SQLException {
-        System.out.println("fuck1");
         boolean result;
-        System.out.println("fuck1");
-
         Connection con = ConnectionPool.getConnection();
-        System.out.println("fuck1");
-
         PreparedStatement st = con.prepareStatement(getInsertStatement());
-        System.out.println("fuck1");
-
-        fillInsertFields(st, restaurant);
-        System.out.println("insert trying");
+        fillInsertValues(st, restaurant);
         try {
-            System.out.println("insert trying");
-
             result = st.execute();
             st.close();
             con.close();
             return result;
         } catch (Exception e) {
-            System.out.println("insert catch");
             st.close();
             con.close();
             e.printStackTrace();
@@ -72,15 +66,18 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO restaurant(id, name, location_x, location_y, logo) VALUES(?,?,?,?,?)";
+//        return "INSERT INTO restaurant(id, name, location_x, location_y) VALUES(?,?,?,?)";
     }
 
 //    @Override
-    protected void fillInsertFields(PreparedStatement st, Restaurant restaurant) throws SQLException {
+    protected void fillInsertValues(PreparedStatement st, Restaurant restaurant) throws SQLException {
         st.setString(1, restaurant.getId());
         st.setString(2, restaurant.getName());
         st.setInt(3, restaurant.getLocation().getX());
         st.setInt(4, restaurant.getLocation().getY());
         st.setString(5, restaurant.getLogo());
+        System.out.println("#####################################################################"+ restaurant.getLogo());
+        System.out.println("#####################################################################"+ restaurant.getLogo().length());
     }
 
     @Override

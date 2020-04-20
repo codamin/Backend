@@ -18,42 +18,20 @@ import java.util.List;
 @Configuration
 @EnableScheduling
 public class DatabaseListener {
-    private static DatabaseListener instance;
-    private static RestaurantMapper restaurantMapper = null;
 
-    static {
-        instance = new DatabaseListener();
-    }
-
-    public DatabaseListener() {
-        System.out.println("print");
-        restaurantMapper = RestaurantMapper.getInstance();
-        System.out.println("shit");
+    public static void start() {
         List<Restaurant> restaurants = FetchData.fetchRestaurants();
-        System.out.println("fuck");
         for(Restaurant restaurant: restaurants) {
             try {
-                System.out.println("try");
                 RestaurantMapper.getInstance().insert(restaurant);
             } catch (SQLException e) {
-                System.out.println("catch");
                 e.printStackTrace();
             }
         }
-        System.out.println("this");
     }
 
-//    private static RestaurantMapper restaurantMapper;
-////    private RestaurantMapper restaurantMapper;
-//
-//
-//
-//    public static void initialDatabase() throws SQLException {
-//        restaurantMapper = RestaurantMapper.getInstance();
-//    }
-
-    @Scheduled(fixedDelay = 85)
+    @Scheduled(fixedDelay = 5000)
     public static void syncData() {
-        System.out.println("fuck :))))");
+        System.out.println("tick tock :))))");
     }
 }

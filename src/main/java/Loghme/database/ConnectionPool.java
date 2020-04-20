@@ -10,7 +10,6 @@ public class ConnectionPool {
     private static ComboPooledDataSource connectionPool = new ComboPooledDataSource();
 
     static {
-        System.out.println("pool connection static block start");
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -26,7 +25,6 @@ public class ConnectionPool {
         connectionPool.setAcquireIncrement(5);
         connectionPool.setMaxPoolSize(20);
         connectionPool.setMaxStatements(100);
-        System.out.println("pool connection static block end");
 
     }
 

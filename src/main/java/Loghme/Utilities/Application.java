@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 public class Application {
     @PostConstruct
     public void init() {
-//        IeatRepository.getInstance();
-        new DatabaseListener();
+        DatabaseListener.start();
     }
 }
