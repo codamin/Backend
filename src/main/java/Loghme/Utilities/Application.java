@@ -1,5 +1,6 @@
 package Loghme.Utilities;
 
+import Loghme.database.DatabaseListener;
 import Loghme.entities.IeatRepository;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import javax.annotation.PostConstruct;
 public class Application {
     @PostConstruct
     public void init() {
-        IeatRepository.getInstance();
+//        IeatRepository.getInstance();
+        new DatabaseListener();
     }
 }

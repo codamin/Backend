@@ -1,0 +1,40 @@
+package Loghme.database;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class ConnectionPool {
+
+    private static ComboPooledDataSource connectionPool = new ComboPooledDataSource();
+
+    static {
+        System.out.println("pool connection static block start");
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        connectionPool.setJdbcUrl("jdbc:mysql://localhost:3306/Loghme?useSSL=false");
+        connectionPool.setUser("ie");
+        connectionPool.setPassword("iePass@2020");
+
+        connectionPool.setInitialPoolSize(5);
+        connectionPool.setMinPoolSize(5);
+        connectionPool.setAcquireIncrement(5);
+        connectionPool.setMaxPoolSize(20);
+        connectionPool.setMaxStatements(100);
+        System.out.println("pool connection static block end");
+
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return connectionPool.getConnection();
+    }
+
+    private ConnectionPool() {}
+
+}
+

@@ -1,0 +1,76 @@
+package Loghme.database.dataMappers;
+
+import Loghme.database.ConnectionPool;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class Mapper<T, I> implements IMapper<T, I> {
+
+    protected Map<I, T> loadedMap = new HashMap<I, T>();
+
+    abstract protected String getFindStatement(I id);
+
+//    abstract protected String getInsertStatement(T t);
+
+    protected abstract String getInsertStatement();
+
+    abstract protected String getDeleteStatement(I id);
+
+    abstract protected T convertResultSetToObject(ResultSet rs) throws SQLException;
+
+    public T find(I id) throws SQLException {
+        T result = loadedMap.get(id);
+        if (result != null)
+            return result;
+
+        try (Connection con = ConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getFindStatement(id))
+        ) {
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                resultSet.next();
+                return convertResultSetToObject(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findByID query.");
+                throw ex;
+            }
+        }
+    }
+
+//    public boolean insert(T obj) throws SQLException {
+//        boolean result;
+//        try (Connection con = ConnectionPool.getConnection();
+//             PreparedStatement st = con.prepareStatement(getInsertStatement(obj))
+//        ) {
+//            try {
+//                result = st.execute();
+//                return result;
+//            } catch (SQLException ex) {
+//                System.out.println("error in Mapper.insert query.");
+//                st.close();
+//                con.close();
+//                ex.printStackTrace();
+//                return false;
+//            }
+//        }
+//    }
+
+    public void delete(I id) throws SQLException {
+        try (Connection con = ConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getDeleteStatement(id))
+        ) {
+            try {
+                st.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.delete query.");
+                throw ex;
+            }
+        }
+    }
+}

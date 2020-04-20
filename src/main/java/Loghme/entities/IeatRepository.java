@@ -21,26 +21,7 @@ public class IeatRepository {
 //    private OrderRepository orderRepository;
     private FoodPartyTimer foodPartyTimer;
 
-    ComboPooledDataSource dataSource;
-
     private IeatRepository() {
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        dataSource = new ComboPooledDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/Loghme");
-        dataSource.setUser("ie");
-        dataSource.setPassword("iePass@2020");
-
-        dataSource.setInitialPoolSize(5);
-        dataSource.setMinPoolSize(5);
-        dataSource.setAcquireIncrement(5);
-        dataSource.setMaxPoolSize(20);
-        dataSource.setMaxStatements(100);
 
         user = new User();
         restaurants = new ArrayList<Restaurant>();
