@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper {
 
@@ -62,6 +63,11 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
     }
 
     @Override
+    protected String getFindAllStatement() throws SQLException {
+        return null;
+    }
+
+    @Override
     protected String getInsertStatement() {
         return "INSERT INTO order(userId, restaurantId, state, remMin, remSec) VALUES(?,?,?,?,?);";
     }
@@ -72,7 +78,12 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
     }
 
     @Override
-    protected Order convertResultSetToObject(ResultSet rs) throws SQLException {
+    protected Order getDAO(ResultSet rs) throws SQLException {
+        return null;
+    }
+
+    @Override
+    protected ArrayList<Order> getDAOList(ResultSet rs) throws SQLException {
         return null;
     }
 

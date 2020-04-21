@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
@@ -49,6 +50,11 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     }
 
     @Override
+    protected String getFindAllStatement() throws SQLException {
+        return null;
+    }
+
+    @Override
     protected String getInsertStatement() {
         return "INSERT INTO user(firstname, lastname, phone, email, credit) VALUES(?,?,?,?,?);";
     }
@@ -59,7 +65,12 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     }
 
     @Override
-    protected User convertResultSetToObject(ResultSet rs) throws SQLException {
+    protected User getDAO(ResultSet rs) throws SQLException {
+        return null;
+    }
+
+    @Override
+    protected ArrayList<User> getDAOList(ResultSet rs) throws SQLException {
         return null;
     }
 

@@ -21,6 +21,15 @@ public class Restaurant {
         description = "";
     }
 
+    public Restaurant(String id, String name, Location location, String logo, ArrayList<Food> menu, String description) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.logo = logo;
+        this.menu = menu;
+        this.description = description;
+    }
+
     public ArrayList<PartyFood> getPartyMenu() {
         return partyMenu;
     }
