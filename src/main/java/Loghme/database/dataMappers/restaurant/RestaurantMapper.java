@@ -2,6 +2,8 @@ package Loghme.database.dataMappers.restaurant;
 
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
+import Loghme.database.dataMappers.food.FoodMapper;
+import Loghme.entities.Food;
 import Loghme.entities.Restaurant;
 
 import java.sql.Connection;
@@ -21,6 +23,10 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         }
     }
 
+    public static RestaurantMapper getInstance() {
+        return instance;
+    }
+
     private RestaurantMapper() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         String query = "CREATE TABLE IF NOT EXISTS restaurant (" +
@@ -28,16 +34,13 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                             "name VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                             "location_x INTEGER," +
                             "location_y INTEGER," +
-                            "logo VARCHAR(200));";
+                            "logo VARCHAR(200)," +
+                            "PRIMARY KEY(id));";
         PreparedStatement createTableStatement = con.prepareStatement(query);
         System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
-    }
-
-    public static RestaurantMapper getInstance() {
-        return instance;
     }
 
     public boolean insert(Restaurant restaurant) throws SQLException {
@@ -47,6 +50,10 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         fillInsertValues(st, restaurant);
         try {
             result = st.execute();
+            FoodMapper foodMapper = FoodMapper.getInstance();
+            for(Food food: restaurant.getMenu()) {
+                foodMapper.insert(food);
+            }
             st.close();
             con.close();
             return result;
@@ -66,18 +73,14 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO restaurant(id, name, location_x, location_y, logo) VALUES(?,?,?,?,?)";
-//        return "INSERT INTO restaurant(id, name, location_x, location_y) VALUES(?,?,?,?)";
     }
 
-//    @Override
     protected void fillInsertValues(PreparedStatement st, Restaurant restaurant) throws SQLException {
         st.setString(1, restaurant.getId());
         st.setString(2, restaurant.getName());
         st.setInt(3, restaurant.getLocation().getX());
         st.setInt(4, restaurant.getLocation().getY());
         st.setString(5, restaurant.getLogo());
-        System.out.println("#####################################################################"+ restaurant.getLogo());
-        System.out.println("#####################################################################"+ restaurant.getLogo().length());
     }
 
     @Override
