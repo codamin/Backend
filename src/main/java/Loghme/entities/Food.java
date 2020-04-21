@@ -1,6 +1,22 @@
 package Loghme.entities;
 
 public class Food {
+
+    public Food() {
+    }
+
+    public Food(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean available) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.popularity = popularity;
+        this.price = price;
+        this.image = image;
+        this.restaurantId = restaurantId;
+        this.available = available;
+    }
+
+    private int id;
     private String name;
     private String description;
     private float popularity;

@@ -5,6 +5,10 @@ public class PartyFood extends Food {
     private int count;
     private int oldPrice;
 
+    public PartyFood(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean available) {
+        super(id, name, description, popularity, price, image, restaurantId, available);
+    }
+
     public int getOldPrice() {
         return oldPrice;
     }
