@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class RestaurantMapper extends Mapper<Restaurant, String> implements IRestaurantMapper {
 
@@ -41,6 +42,24 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
+    }
+
+    public ArrayList<Restaurant> getAllRestaurants() {
+        ArrayList<Restaurant> result = new ArrayList<Restaurant>();
+        try (Connection con = ConnectionPool.getConnection();
+             Statement stmt = con.createStatement();
+        ) {
+            ResultSet resultSet;
+            resultSet = stmt.executeQuery(getAllUsersStatement());
+            while(resultSet.next())
+            {
+                result.add(convertResultSetToDomainModel(resultSet));
+            }
+            resultSet.close();
+            stmt.close();
+            con.close();
+            return result;
+        }
     }
 
     public boolean insert(Restaurant restaurant) throws SQLException {
