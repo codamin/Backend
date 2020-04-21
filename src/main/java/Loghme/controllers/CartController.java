@@ -1,21 +1,21 @@
-//package Loghme.controllers;
-//
-//import Loghme.entities.Cart;
-//import Loghme.entities.IeatRepository;
-//import Loghme.entities.OrderItem;
-//import Loghme.requests.AddToCart;
-//import Loghme.requests.DeleteFromCart;
-////import Loghme.services.CartService;
-//import org.springframework.web.bind.annotation.*;
-//
-//@RestController
-//@RequestMapping("/cart")
-//public class CartController {
-//
-//    @GetMapping
-//    public Cart getCart() {
-//        return IeatRepository.getInstance().getCart();
-//    }
+package Loghme.controllers;
+
+import Loghme.entities.Cart;
+import Loghme.entities.IeatRepository;
+import Loghme.entities.OrderItem;
+import Loghme.requests.AddToCart;
+import Loghme.requests.DeleteFromCart;
+//import Loghme.services.CartService;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/cart")
+public class CartController {
+
+    @GetMapping
+    public Cart getCart() {
+        return IeatRepository.getInstance().getCart();
+    }
 //
 //    @GetMapping("/{restaurantId}/{foodName}")
 //    public OrderItem getOrderItem(@PathVariable("restaurantId") String restaurantId, @PathVariable("foodName") String foodName) {
@@ -36,5 +36,5 @@
 //    public void finalizeCart() {
 //        CartService.finalizeCart();
 //    }
-//
-//}
+
+}

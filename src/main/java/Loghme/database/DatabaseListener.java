@@ -2,6 +2,8 @@ package Loghme.database;
 
 import Loghme.Utilities.FetchData;
 import Loghme.Utilities.RequestApi;
+import Loghme.database.dataMappers.order.OrderMapper;
+import Loghme.database.dataMappers.order.item.OrderItemMapper;
 import Loghme.database.dataMappers.restaurant.IRestaurantMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
 import Loghme.database.dataMappers.user.UserMapper;
@@ -38,6 +40,8 @@ public class DatabaseListener {
             e.printStackTrace();
         }
 
+        OrderMapper.getInstance();
+        OrderItemMapper.getInstance();
         
     }
 
