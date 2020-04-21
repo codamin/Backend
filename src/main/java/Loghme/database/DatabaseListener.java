@@ -4,7 +4,9 @@ import Loghme.Utilities.FetchData;
 import Loghme.Utilities.RequestApi;
 import Loghme.database.dataMappers.restaurant.IRestaurantMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
+import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.Restaurant;
+import Loghme.entities.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,15 @@ public class DatabaseListener {
                 e.printStackTrace();
             }
         }
+
+        User khames = new User();
+        try {
+            UserMapper.getInstance().insert(khames);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        
     }
 
     @Scheduled(fixedDelay = 5000)
