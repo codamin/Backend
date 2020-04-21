@@ -29,15 +29,15 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
 
     private OrderMapper() throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        String query = "CREATE TABLE IF NOT EXISTS order (" +
-                "id INTEGER NOT NULL AUTO_INCREMENT" +
+        String query = "CREATE TABLE IF NOT EXISTS orders (" +
+                "id INTEGER NOT NULL AUTO_INCREMENT," +
                 "userId VARCHAR(30)," +
                 "restaurantId VARCHAR(24)," +
                 "state VARCHAR(20)," +
                 "remMin INTEGER," +
                 "remSec INTEGER," +
                 "PRIMARY KEY(id)," +
-                "FOREIGN KEY(userId) REFERENCES user," +
+                "FOREIGN KEY(userId) REFERENCES user(email)," +
                 "FOREIGN KEY(restaurantId) REFERENCES restaurant(id)" +
                 ");";
 
