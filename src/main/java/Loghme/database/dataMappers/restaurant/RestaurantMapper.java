@@ -30,7 +30,7 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     private RestaurantMapper() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         String query = "CREATE TABLE IF NOT EXISTS restaurant (" +
-                            "id VARCHAR(200)," +
+                            "id VARCHAR(24)," +
                             "name VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                             "location_x INTEGER," +
                             "location_y INTEGER," +
@@ -51,6 +51,8 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         try {
             result = st.execute();
             FoodMapper foodMapper = FoodMapper.getInstance();
+            restaurant.setRestaurantIds();
+            restaurant.setRestaurantNames();
             for(Food food: restaurant.getMenu()) {
                 foodMapper.insert(food);
             }
