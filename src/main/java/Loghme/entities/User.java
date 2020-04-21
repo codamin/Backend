@@ -47,6 +47,15 @@ public class User {
         orderRepository = new OrderRepository();
     }
 
+    public User(String _firstName, String _lastName, String _phone, String _email, Integer _credit) {
+        firstName = _firstName;
+        lastName = _lastName;
+        phone = _phone;
+        email = _email;
+        credit = _credit;
+        orderRepository = new OrderRepository();
+    }
+
     public String getFirstName() {
         return firstName;
     }

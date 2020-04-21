@@ -44,34 +44,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     }
 
     @Override
-    protected String getFindStatement(String id) {
-        return null;
-    }
-
-    @Override
-    protected String getInsertStatement() {
-        return "INSERT INTO user(firstname, lastname, phone, email, credit) VALUES(?,?,?,?,?);";
-    }
-
-    @Override
-    protected String getDeleteStatement(String id) {
-        return null;
-    }
-
-    @Override
-    protected User convertResultSetToObject(ResultSet rs) throws SQLException {
-        return null;
-    }
-
-    protected void fillInsertValues(PreparedStatement st, User user) throws SQLException {
-        st.setString(1, user.getFirstName());
-        st.setString(2, user.getLastName());
-        st.setString(3, user.getPhone());
-        st.setString(4, user.getEmail());
-        st.setInt(5, user.getCredit());
-    }
-
-    @Override
     public boolean insert(User user) throws SQLException {
         boolean result;
         Connection con = ConnectionPool.getConnection();
@@ -87,6 +59,65 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
             con.close();
             e.printStackTrace();
             return false;
+        }
+    }
+
+    @Override
+    protected String getInsertStatement() {
+        return "INSERT INTO user(firstname, lastname, phone, email, credit) VALUES(?,?,?,?,?);";
+    }
+
+    protected void fillInsertValues(PreparedStatement st, User user) throws SQLException {
+        st.setString(1, user.getFirstName());
+        st.setString(2, user.getLastName());
+        st.setString(3, user.getPhone());
+        st.setString(4, user.getEmail());
+        st.setInt(5, user.getCredit());
+    }
+
+    @Override
+    protected String getFindStatement(String id) {
+        String query = "SELECT * FROM user WHERE email = \"" + id + "\";";
+        return query;
+    }
+
+    @Override
+    protected String getDeleteStatement(String id) {
+        return null;
+    }
+
+    @Override
+    protected User convertResultSetToObject(ResultSet rs) throws SQLException {
+        String firstname = rs.getString(1);
+        String lastname = rs.getString(2);
+        String phone = rs.getString(3);
+        String email = rs.getString(4);
+        Integer credit = rs.getInt(5);
+        User user = new User(firstname, lastname, phone, email, credit);
+        return user;
+    }
+
+    protected String getAddCreditStatment() {
+        return "UPDATE TABLE user SET credit = credit + ? + WHERE email = \"?\"";
+    }
+
+    protected void fillAddCreditStatement(PreparedStatement st, String id, Integer amount) throws SQLException {
+        st.setInt(1, amount);
+        st.setString(2, id);
+    }
+
+    public void addCredit(String id, Integer amount) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getAddCreditStatment());
+        fillAddCreditStatement(st, id, amount);
+        try {
+            st.execute();
+            st.close();
+            con.close();
+        } catch (Exception e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
         }
     }
 }
