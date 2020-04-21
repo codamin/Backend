@@ -16,7 +16,7 @@ public class ConnectionPool {
             e.printStackTrace();
         }
 
-        connectionPool.setJdbcUrl("jdbc:mysql://localhost:3306/Loghme?useSSL=false");
+        connectionPool.setJdbcUrl("jdbc:mysql://localhost:3306/Loghme?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
         connectionPool.setUser("ie");
         connectionPool.setPassword("iePass@2020");
 
