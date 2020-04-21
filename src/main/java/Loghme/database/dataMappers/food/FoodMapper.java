@@ -31,17 +31,18 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         Connection con = ConnectionPool.getConnection();
         String query = "CREATE TABLE IF NOT EXISTS food (" +
                 "id INTEGER NOT NULL AUTO_INCREMENT," +
-                "PRIMARY KEY(id)," +
                 "name VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "description VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "popularity INTEGER," +
                 "price INTEGER," +
                 "image VARCHAR(200)," +
-                "restaurantName VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
-                "restaurantId VARCHAR(200)," +
+                "restaurantId VARCHAR(24)," +
                 "available INTEGER," +
-                "FOREIGN KEY(restaurantId) REFERENCES restaurant(id));";
+                "PRIMARY KEY(id)," +
+                "FOREIGN KEY(restaurantId) REFERENCES restaurant(id)" +
+                ");";
         PreparedStatement createTableStatement = con.prepareStatement(query);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
@@ -57,8 +58,8 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT IGNORE INTO food(name,description,popularity,price,image,restaurantName,restaurantId,available)" +
-                " VALUES(?,?,?,?,?,?,?,?)";
+        return "INSERT IGNORE INTO food(id,name,description,popularity,price,image,restaurantId,available)" +
+                " VALUES(DEFAULT,?,?,?,?,?,?,?)";
     }
 
     @Override
@@ -72,9 +73,8 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         st.setFloat(3, food.getPopularity());
         st.setInt(4, food.getPrice());
         st.setString(5,food.getImage());
-        st.setString(6, food.getRestaurantName());
-        st.setString(7, food.getRestaurantId());
-        st.setBoolean(8, food.getAvailable());
+        st.setString(6, food.getRestaurantId());
+        st.setBoolean(7, food.getAvailable());
     }
 
     @Override
