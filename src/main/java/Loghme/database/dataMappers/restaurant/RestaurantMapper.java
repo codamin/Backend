@@ -73,7 +73,8 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     @Override
     protected String getFindStatement(String id) {
         return "SELECT * " +
-                "FROM restaurant";
+                "FROM Restaurant r" +
+                "WHERE r.id = ?";
     }
 
     @Override

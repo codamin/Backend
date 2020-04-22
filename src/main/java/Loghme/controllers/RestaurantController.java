@@ -21,8 +21,9 @@ public class RestaurantController {
         return RestaurantService.getRestaurantsList();
     }
 
-//    @GetMapping("/{restaurantId}")
-//    public Restaurant getRestaurant(@PathVariable("restaurantId") String restaurantId) {
+    @GetMapping("/{restaurantId}")
+    public Restaurant getRestaurant(@PathVariable("restaurantId") String restaurantId) {
 //        return IeatRepository.getInstance().getRestaurantById(restaurantId);
-//    }
+        return RestaurantService.getRestaurant();
+    }
 }

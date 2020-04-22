@@ -16,4 +16,9 @@ public class RestaurantService {
         }
         return result;
     }
+
+    public static Restaurant getRestaurant(String id) throws SQLException {
+        Restaurant result = RestaurantMapper.getInstance().find(id);
+        return result;
+    }
 }
