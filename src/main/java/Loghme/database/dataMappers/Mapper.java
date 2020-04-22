@@ -42,7 +42,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
                 resultSet.next();
                 return getDAO(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                ex.printStackTrace();
                 throw ex;
             }
         }

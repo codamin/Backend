@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrderMapper {
 
@@ -50,8 +51,18 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
     }
 
     @Override
+    protected String getFindAllStatement() throws SQLException {
+        return null;
+    }
+
+    @Override
     protected String getInsertStatement() {
         return "INSERT INTO orderItem(id, name, location_x, location_y, logo) VALUES(?,?,?,?,?)";
+    }
+
+    @Override
+    protected void fillInsertValues(PreparedStatement st, OrderItem obj) throws SQLException {
+
     }
 
     @Override
@@ -60,6 +71,16 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
     }
 
     @Override
+    protected OrderItem getDAO(ResultSet rs) throws SQLException {
+        return null;
+    }
+
+    @Override
+    protected ArrayList<OrderItem> getDAOList(ResultSet rs) throws SQLException {
+        return null;
+    }
+
+//    @Override
     protected OrderItem convertResultSetToObject(ResultSet rs) throws SQLException {
         return null;
     }

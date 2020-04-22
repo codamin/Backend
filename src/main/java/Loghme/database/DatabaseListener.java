@@ -36,13 +36,15 @@ public class DatabaseListener {
         User khames = new User();
         try {
             UserMapper.getInstance().insert(khames);
+            System.out.println(">>>>>>>><<<<<<<<<<<<<<<<<<, to find khames");
+            UserMapper.getInstance().find(khames.getEmail());
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         OrderMapper.getInstance();
         OrderItemMapper.getInstance();
-        
+
     }
 
     @Scheduled(fixedDelay = 5000)
