@@ -123,20 +123,15 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindStatement(orderId, foodId));
         try {
-            System.out.println("to exec find query");
             ResultSet rs = st.executeQuery();
-            System.out.println("done");
             if(rs.isClosed()) {
                 st.close();
                 con.close();
-                System.out.println("rs is closed on search for orderItem");
                 return null;
             }
             ArrayList<OrderItem> items = getDAOList(rs);
             st.close();
             con.close();
-            System.out.println("size item list");
-            System.out.println(items.size());
             if(items.size() == 0)
                 return null;
             else
@@ -196,6 +191,34 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
             st.close();
             con.close();
             return result;
+        } catch (SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    private String getFindAllStatement(int orderId) {
+        String query = "SELECT * FROM orderItem WHERE orderId = " + String.valueOf(orderId) + ";";
+        System.out.println("query");
+        return query;
+    }
+
+    public ArrayList<OrderItem> findAll(int orderId) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindAllStatement(orderId));
+        try {
+            ResultSet rs = st.executeQuery();
+            if(rs.isClosed()) {
+                st.close();
+                con.close();
+                return new ArrayList<OrderItem>();
+            }
+            ArrayList<OrderItem> items = getDAOList(rs);
+            st.close();
+            con.close();
+            return items;
         } catch (SQLException e) {
             st.close();
             con.close();

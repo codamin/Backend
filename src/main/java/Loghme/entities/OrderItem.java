@@ -19,6 +19,7 @@ public class OrderItem {
         orderId = _orderId;
         foodId = _foodId;
         number = _number;
+
     }
 
 

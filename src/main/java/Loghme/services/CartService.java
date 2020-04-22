@@ -12,9 +12,8 @@ public class CartService {
 //    private static CartRepository cartRepository = new CarRepository();
 
     public static Order getCart(String email) {
-        Cart cart = new Cart();
         OrderMapper orderMapper = OrderMapper.getInstance();
-        Order resp = null;
+        Order resp = new Order();
         try {
             resp = orderMapper.getCart(email);
         } catch (SQLException e) {
@@ -28,10 +27,6 @@ public class CartService {
 //    }
 //
     public static void addToCart(String userId, String restaurantId, String foodName, int number) {
-        System.out.println("cart service : add to cart ");
-        System.out.println(userId + restaurantId + foodName);
-        System.out.println(number);
-        System.out.println(">>>>>>>>>>>>>>>>");
         OrderMapper orderMapper = OrderMapper.getInstance();
         orderMapper.addToCart(userId, restaurantId, foodName, number);
     }

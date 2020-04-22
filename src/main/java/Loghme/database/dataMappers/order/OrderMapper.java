@@ -170,8 +170,14 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             System.out.println(orders.size());
             if(orders.size() == 0)
                 return null;
-            else
-                return orders.get(0);
+            else {
+                Order order = orders.get(0);
+                OrderItemMapper itemMapper = OrderItemMapper.getInstance();
+                for(OrderItem item: itemMapper.findAll(order.getId())) {
+                    order.addItem(item);
+                }
+                return order;
+            }
         } catch (SQLException e) {
             System.out.println("error in find the not finalized order");
             st.close();

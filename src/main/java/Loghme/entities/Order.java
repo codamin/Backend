@@ -32,6 +32,10 @@ public class Order {
         this.restaurantName = restaurantName;
     }
 
+    public void addItem(OrderItem item) {
+        orderItems.add(item);
+    }
+
     public Integer getId() {
         return id;
     }
