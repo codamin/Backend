@@ -42,7 +42,6 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
                 "FOREIGN KEY(restaurantId) REFERENCES restaurant(id)" +
                 ");";
         PreparedStatement createTableStatement = con.prepareStatement(query);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
@@ -58,8 +57,12 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
 
     @Override
     protected String getFindAllStatement() throws SQLException {
-        return "SELECT *" +
-                "FROM food;";
+        System.out.println("SELECT * " +
+                "FROM food f " +
+                "WHERE f.restaurantId = ?");
+        return "SELECT * " +
+                "FROM food f " +
+                "WHERE f.restaurantId = ?";
     }
 
     @Override
@@ -110,5 +113,29 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     @Override
     public Food find(Integer id) throws SQLException {
         return null;
+    }
+
+    @Override
+    public ArrayList<Food> findAll(String restaurantId) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindAllStatement());
+        st.setString(1, restaurantId);
+        try {
+            ResultSet resultSet = st.executeQuery();
+            if (resultSet.isClosed()) {
+                st.close();
+                con.close();
+                return new ArrayList<Food>();
+            }
+            ArrayList<Food> result = getDAOList(resultSet);
+            st.close();
+            con.close();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("error in FoodMapper.findAll query.");
+            st.close();
+            con.close();
+            throw e;
+        }
     }
 }

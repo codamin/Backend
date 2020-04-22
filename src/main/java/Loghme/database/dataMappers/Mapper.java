@@ -1,6 +1,10 @@
 package Loghme.database.dataMappers;
 
 import Loghme.database.ConnectionPool;
+import Loghme.entities.Restaurant;
+import org.springframework.http.converter.json.GsonBuilderUtils;
+
+import javax.crypto.spec.PSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,6 +31,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
     //DAO
     abstract protected T getDAO(ResultSet rs) throws SQLException;
     abstract protected ArrayList<T> getDAOList(ResultSet rs) throws SQLException;
+
 
     public T find(I id) throws SQLException {
         T result = loadedMap.get(id);

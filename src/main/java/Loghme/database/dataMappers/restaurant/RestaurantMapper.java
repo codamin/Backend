@@ -35,9 +35,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                             "id VARCHAR(24)," +
                             "name VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                             "location_x INTEGER," +
-                            "description VARCHAR(200)," +
                             "location_y INTEGER," +
                             "logo VARCHAR(200)," +
+                            "description VARCHAR(200)," +
                             "PRIMARY KEY(id));";
         PreparedStatement createTableStatement = con.prepareStatement(query);
         System.out.println(query);
@@ -70,11 +70,49 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         }
     }
 
+    public ArrayList<Restaurant> search(String restaurantSearch, String foodSearch) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getSearchStatement(restaurantSearch, foodSearch));
+        try {
+            ResultSet resultSet = st.executeQuery();
+            if (resultSet.isClosed()) {
+                st.close();
+                con.close();
+                return new ArrayList<Restaurant>();
+            }
+            ArrayList<Restaurant> result = getDAOList(resultSet);
+            st.close();
+            con.close();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("error in Mapper.findAll query.");
+            st.close();
+            con.close();
+            throw e;
+        }
+    }
+
     @Override
     protected String getFindStatement(String id) {
+        System.out.println("SELECT * " +
+                "FROM restaurant r " +
+                "WHERE r.id = " + String.format("'%s'", id));
+
         return "SELECT * " +
-                "FROM Restaurant r" +
-                "WHERE r.id = ?";
+                "FROM restaurant r " +
+                "WHERE r.id = " + String.format("'%s'", id);
+    }
+
+    protected String getSearchStatement(String restaurantSearch, String foodSearch) {
+        String x = "SELECT * " +
+                "FROM restaurant r " +
+                "WHERE r.name LIKE " + "'%" + (restaurantSearch == null ? "" : restaurantSearch.toLowerCase()) + "%'" +
+                "AND EXISTS(SELECT * " +
+                "FROM food f " +
+                "WHERE f.restaurantID = r.id AND f.name LIKE " + "'%" + (foodSearch == null ? "" :
+                foodSearch.toLowerCase()) + "%')";
+        System.out.println(x);
+        return x;
     }
 
     @Override
@@ -114,7 +152,7 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         ArrayList<Food> menu = new ArrayList<Food>();
 
         FoodMapper foodMapper = FoodMapper.getInstance();
-        for(Food food: foodMapper.findAll()) {
+        for(Food food: foodMapper.findAll(id)) {
             menu.add(food);
         }
         return new Restaurant(id, name, location, logo, menu, description);
