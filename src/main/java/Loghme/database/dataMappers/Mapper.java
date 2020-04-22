@@ -1,6 +1,7 @@
 package Loghme.database.dataMappers;
 
 import Loghme.database.ConnectionPool;
+import Loghme.entities.Order;
 import Loghme.entities.Restaurant;
 import org.springframework.http.converter.json.GsonBuilderUtils;
 

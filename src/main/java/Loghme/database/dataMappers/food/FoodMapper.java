@@ -138,4 +138,35 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
             throw e;
         }
     }
+
+    private String getFindStatement(String name, String restaurantId) {
+        String query = "SELECT * FROM food WHERE\n" +
+                "name = " + String.format("'%s'", name) + "AND \n" +
+                "restaurantId = " + String.format("'%s'", restaurantId) + ";";
+        return query;
+    }
+
+    public ArrayList<Food> find(String name, String restaurantId) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindStatement(name, restaurantId));
+
+        try {
+            ResultSet resultSet = st.executeQuery();
+            if (resultSet.isClosed()) {
+                st.close();
+                con.close();
+                return new ArrayList<Food>();
+            }
+            ArrayList<Food> result = getDAOList(resultSet);
+            st.close();
+            con.close();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("error in FoodMapper.findBy name & resaurantId query.");
+            st.close();
+            con.close();
+            throw e;
+        }
+    }
+
 }

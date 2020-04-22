@@ -1,5 +1,6 @@
 package Loghme.entities;
 
+import Loghme.entities.Restaurant;
 import java.util.ArrayList;
 
 public class Order {
@@ -13,6 +14,8 @@ public class Order {
         this.restaurant = restaurant;
     }
 
+    private String userId;
+    private String restaurantId;
     private Restaurant restaurant;
     private ArrayList<OrderItem> orderItems;
     private String restaurantName;
@@ -62,6 +65,43 @@ public class Order {
         state = "finding delivery";
         remMin = -1;
         remSec = -1;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public Order() {
+        restaurantId = null;
+        userId = null;
+        restaurant = null;
+        orderItems = new ArrayList<OrderItem>();
+        restaurantName = null;
+        state = null;
+        remMin = -1;
+        remSec = -1;
+    }
+
+    public Order(int _id, String _userId, String _restaurantId, String _state, int _remMin, int _remSec) {
+        id = _id;
+        userId = _userId;
+        restaurantId = _restaurantId;
+        state = _state;
+        remMin = _remMin;
+        remSec = _remSec;
+        orderItems = new ArrayList<OrderItem>();
     }
 
     public int getRemMin() {

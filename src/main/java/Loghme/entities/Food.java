@@ -16,6 +16,14 @@ public class Food {
         this.available = available;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private int id;
     private String name;
     private String description;

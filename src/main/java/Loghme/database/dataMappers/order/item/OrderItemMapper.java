@@ -6,6 +6,7 @@ import Loghme.database.dataMappers.order.IOrderMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
 import Loghme.entities.Order;
 import Loghme.entities.OrderItem;
+//import com.sun.org.apache.xalan.internal.xsltc.trax.XSLTCSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -72,12 +73,23 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
 
     @Override
     protected OrderItem getDAO(ResultSet rs) throws SQLException {
-        return null;
+        System.out.println("add one dao");
+        int orderId = rs.getInt(1);
+        int foodId = rs.getInt(2);
+        int num = rs.getInt(3);
+        OrderItem item = new OrderItem(orderId, foodId, num);
+        return item;
     }
 
     @Override
     protected ArrayList<OrderItem> getDAOList(ResultSet rs) throws SQLException {
-        return null;
+        System.out.println("get dao list");
+        ArrayList<OrderItem> resp = new ArrayList<OrderItem>();
+        System.out.println("before while");
+        while(rs.next()) {
+            resp.add(getDAO(rs));
+        }
+        return resp;
     }
 
     //    @Override
@@ -99,4 +111,96 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
 
 //    private void fillInsertValues(PreparedStatement st, OrderItem orderItem) {
 //    }
+
+    private String getFindStatement(int orderId, int foodId) {
+        String query = "SELECT * FROM orderItem WHERE\n" +
+                "orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
+        System.out.println(query);
+        return query;
+    }
+
+    private OrderItem find(int orderId, int foodId) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindStatement(orderId, foodId));
+        try {
+            System.out.println("to exec find query");
+            ResultSet rs = st.executeQuery();
+            System.out.println("done");
+            if(rs.isClosed()) {
+                st.close();
+                con.close();
+                System.out.println("rs is closed on search for orderItem");
+                return null;
+            }
+            ArrayList<OrderItem> items = getDAOList(rs);
+            st.close();
+            con.close();
+            System.out.println("size item list");
+            System.out.println(items.size());
+            if(items.size() == 0)
+                return null;
+            else
+                return items.get(0);
+        } catch (SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    private String getInsertStatement(int orderId, int foodId, int number) {
+        String query = "INSERT INTO orderItem(orderId, foodId, num)VALUES(" + String.valueOf(orderId) + "," + String.valueOf(foodId) + "," + String.valueOf(number) + ");";
+        System.out.println(query);
+        return query;
+    }
+
+    private String getChangeAmountStatement(int orderId, int foodId, int number) {
+        String query = "UPDATE orderItem SET num = num + "
+                + String.valueOf(number) + " WHERE orderId = "
+                + String.valueOf(orderId) + " AND foodId = "
+                + String.valueOf(foodId) + ";";
+        System.out.println(query);
+        return query;
+    }
+
+    private boolean changeNumber(int orderId, int foodId, int number) throws SQLException {
+        boolean result;
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getChangeAmountStatement(orderId, foodId, number));
+        try {
+            result = st.execute();
+            st.close();
+            con.close();
+            return result;
+        } catch(SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public boolean insert(int orderId, int foodId, int number) throws SQLException {
+        boolean result;
+        OrderItem item = find(orderId, foodId);
+        if(item != null) {
+            result = changeNumber(orderId, foodId, number);
+            return result;
+        }
+        System.out.println("run not null");
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getInsertStatement(orderId, foodId, number));
+        try {
+            result = st.execute();
+            st.close();
+            con.close();
+            return result;
+        } catch (SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }
