@@ -6,6 +6,7 @@ import Loghme.entities.IeatRepository;
 import Loghme.entities.Order;
 import Loghme.requests.DeleteFromCart;
 
+import java.beans.PropertyEditorSupport;
 import java.sql.SQLException;
 
 public class CartService {
@@ -31,11 +32,13 @@ public class CartService {
         orderMapper.addToCart(userId, restaurantId, foodName, number);
     }
 //
-//    public static void deleteFromCart(String restaurantId, String foodName) {
-//        cartRepository.deleteFromCart(restaurantId, foodName);
-//    }
-//
-//    public static void finalizeCart() {
-//        cartRepository.finalizeCart();
-//    }
+    public static void deleteFromCart(String userId, String restaurantId, String foodName) {
+        OrderMapper orderMapper = OrderMapper.getInstance();
+        orderMapper.addToCart(userId, restaurantId, foodName, -1);
+    }
+
+    public static void finalizeCart(String userId) {
+        OrderMapper orderMapper = OrderMapper.getInstance();
+        OrderMapper.finalizeCart(userId);
+    }
 }

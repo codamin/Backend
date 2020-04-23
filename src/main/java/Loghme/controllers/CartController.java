@@ -4,7 +4,7 @@ package Loghme.controllers;
 import Loghme.entities.Order;
 //import Loghme.entities.OrderItem;
 //import Loghme.requests.AddToCart;
-//import Loghme.requests.DeleteFromCart;
+import Loghme.requests.DeleteFromCart;
 //import Loghme.services.CartService;
 import Loghme.requests.AddToCart;
 import Loghme.services.CartService;
@@ -28,15 +28,15 @@ public class CartController {
     public void addToCart(@RequestBody AddToCart req) {
         CartService.addToCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName(), req.getNum());
     }
-//
-//    @DeleteMapping()
-//    public void deleteFromCart(@RequestBody DeleteFromCart req) {
-//        CartService.deleteFromCart(req.getRestaurantId(), req.getFoodName());
-//    }
-//
-//    @PostMapping("/finalize")
-//    public void finalizeCart() {
-//        CartService.finalizeCart();
-//    }
+
+    @DeleteMapping()
+    public void deleteFromCart(@RequestBody DeleteFromCart req) {
+        CartService.deleteFromCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName());
+    }
+
+    @PostMapping("/finalize")
+    public void finalizeCart() {
+        CartService.finalizeCart("ekhamespanah@yahoo.com");
+    }
 
 }

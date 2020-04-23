@@ -14,12 +14,12 @@ public class OrderItem {
         number = 0;
     }
 
-    public OrderItem(int _orderId, int _foodId, int _number) {
+    public OrderItem(int _orderId, int _foodId, int _number, Food _food) {
         food = null;
         orderId = _orderId;
         foodId = _foodId;
         number = _number;
-
+        food = _food;
     }
 
 
