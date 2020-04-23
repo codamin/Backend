@@ -1,6 +1,5 @@
 package Loghme.scheduler;
 
-import Loghme.Utilities.RequestApi;
 import Loghme.entities.Restaurant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
+
+import static Loghme.Utilities.FetchData.request;
 
 public class HandleFoodPartyPeriodic extends TimerTask {
 
@@ -58,7 +59,7 @@ public class HandleFoodPartyPeriodic extends TimerTask {
         System.out.println("requesting food party data at = " + System.currentTimeMillis() / 1000);
         String data = null;
         try {
-            data = RequestApi.request("http://138.197.181.131:8080/foodparty").replace("menu", "partyMenu");
+            data = request("http://138.197.181.131:8080/foodparty").replace("menu", "partyMenu");
             updateDataParty(data);
         } catch (IOException e) {
             e.printStackTrace();

@@ -3,8 +3,10 @@ package Loghme.database.dataMappers.restaurant;
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
 import Loghme.database.dataMappers.food.FoodMapper;
+import Loghme.database.dataMappers.partyFood.PartyFoodMapper;
 import Loghme.entities.Food;
 import Loghme.entities.Location;
+import Loghme.entities.PartyFood;
 import Loghme.entities.Restaurant;
 
 import java.sql.Connection;
@@ -53,11 +55,18 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         fillInsertValues(st, restaurant);
         try {
             result = st.execute();
-            FoodMapper foodMapper = FoodMapper.getInstance();
             restaurant.setRestaurantIds();
             restaurant.setRestaurantNames();
+
+            FoodMapper foodMapper = FoodMapper.getInstance();
             for(Food food: restaurant.getMenu()) {
                 foodMapper.insert(food);
+            }
+            PartyFoodMapper partyFoodMapper = PartyFoodMapper.getInstance();
+            System.out.println("*******************************inserting food parties***********************");
+            System.out.println("^^^^^^^^^^^^^fp size = " + restaurant.getPartyMenu().size());
+            for(PartyFood partyFood: restaurant.getPartyMenu()) {
+                partyFoodMapper.insert(partyFood);
             }
             st.close();
             con.close();

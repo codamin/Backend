@@ -1,15 +1,15 @@
 package Loghme.entities;
 
-import Loghme.Utilities.RequestApi;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.exceptions.NotFoundException;
 import Loghme.scheduler.HandleFoodPartyPeriodic;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import java.io.IOException;
 import java.util.*;
+
+import static Loghme.Utilities.FetchData.request;
 
 public class IeatRepository {
 
@@ -66,7 +66,7 @@ public class IeatRepository {
     public void initDatabase() {
         String data;
         try {
-            data = RequestApi.request("http://138.197.181.131:8080/restaurants");
+            data = request("http://138.197.181.131:8080/restaurants");
             addRestaurants(data);
             setFoodsRestaurant();
         } catch (IOException e) {

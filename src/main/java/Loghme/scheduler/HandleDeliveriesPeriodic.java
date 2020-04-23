@@ -1,6 +1,5 @@
 package Loghme.scheduler;
 
-import Loghme.Utilities.RequestApi;
 import Loghme.entities.Delivery;
 import Loghme.entities.Location;
 import Loghme.entities.Order;
@@ -12,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static Loghme.Utilities.FetchData.request;
 
 public class HandleDeliveriesPeriodic extends TimerTask {
 
@@ -48,25 +49,21 @@ public class HandleDeliveriesPeriodic extends TimerTask {
     public void run() {
         System.out.println("requesting for deliveries at time: " + System.currentTimeMillis() / 1000);
         String data = null;
-        try {
-            data = RequestApi.request("http://138.197.181.131:8080/deliveries");
-            ArrayList<Delivery> deliveries = getDeliveriesList(data);
-            if(deliveries.size() > 0) {
+        data = request("http://138.197.181.131:8080/deliveries");
+        ArrayList<Delivery> deliveries = getDeliveriesList(data);
+        if(deliveries.size() > 0) {
 
-                System.out.println("A delivery found at time = " + System.currentTimeMillis() / 1000);
+            System.out.println("A delivery found at time = " + System.currentTimeMillis() / 1000);
 
-                order.setState("delivering");
-                float deliveryDelay = getDeliveryDelay(order.getRestaurant().getLocation(), deliveries);
-                TimerTask setStateToDone = new SetStateToDone(order);
-                Timer timer = new Timer();
+            order.setState("delivering");
+            float deliveryDelay = getDeliveryDelay(order.getRestaurant().getLocation(), deliveries);
+            TimerTask setStateToDone = new SetStateToDone(order);
+            Timer timer = new Timer();
 
-                System.out.println("delivery delay = " + deliveryDelay + " seconds");
+            System.out.println("delivery delay = " + deliveryDelay + " seconds");
 
-                timer.schedule(setStateToDone, (long) deliveryDelay * 1000);
-                this.cancel();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            timer.schedule(setStateToDone, (long) deliveryDelay * 1000);
+            this.cancel();
         }
     }
 }

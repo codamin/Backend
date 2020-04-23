@@ -9,6 +9,13 @@ public class PartyFood extends Food {
         super(id, name, description, popularity, price, image, restaurantId, available);
     }
 
+    public PartyFood(int id, String name, String description, float popularity, int price, String image,
+                     String restaurantId, boolean available, int count, int oldPrice) {
+        super(id, name, description, popularity, price, image, restaurantId, available);
+        this.count = count;
+        this.oldPrice = oldPrice;
+    }
+
     public int getOldPrice() {
         return oldPrice;
     }

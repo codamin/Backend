@@ -1,9 +1,8 @@
-package Loghme.database.dataMappers.food;
+package Loghme.database.dataMappers.partyFood;
 
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
-import Loghme.database.dataMappers.restaurant.RestaurantMapper;
-import Loghme.entities.Food;
+import Loghme.entities.PartyFood;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,25 +10,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
+public class PartyFoodMapper extends Mapper<PartyFood, Integer> implements IPartyFoodMapper {
 
-    private static FoodMapper instance;
+    private static PartyFoodMapper instance;
 
     static {
         try {
-            instance = new FoodMapper();
+            instance = new PartyFoodMapper();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static FoodMapper getInstance() {
+    public static PartyFoodMapper getInstance() {
         return instance;
     }
 
-    private FoodMapper() throws SQLException {
+    private PartyFoodMapper() throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        String query = "CREATE TABLE IF NOT EXISTS food (" +
+        String query = "CREATE TABLE IF NOT EXISTS partyFood (" +
                 "id INTEGER NOT NULL AUTO_INCREMENT," +
                 "name VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "description VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
@@ -37,7 +36,9 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
                 "price INTEGER," +
                 "image VARCHAR(200)," +
                 "restaurantId VARCHAR(24)," +
-                "available INTEGER ," +
+                "available INTEGER," +
+                "count INTEGER," +
+                "oldPrice INTEGER," +
                 "PRIMARY KEY(id)," +
                 "FOREIGN KEY(restaurantId) REFERENCES restaurant(id)" +
                 ");";
@@ -51,24 +52,34 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     @Override
     protected String getFindStatement(Integer id) {
         return "SELECT * " +
-                "FROM food f" +
+                "FROM partyFood f" +
                 "WHERE f.id = " + id.toString();
     }
 
     @Override
     protected String getFindAllStatement() throws SQLException {
-        System.out.println("SELECT * " +
-                "FROM food f " +
-                "WHERE f.restaurantId = ?");
         return "SELECT * " +
-                "FROM food f " +
+                "FROM partyFood f " +
                 "WHERE f.restaurantId = ?";
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT IGNORE INTO food(id,name,description,popularity,price,image,restaurantId,available)" +
-                " VALUES(DEFAULT,?,?,?,?,?,?,?)";
+        return "INSERT IGNORE INTO partyFood(id,name,description,popularity,price,image,restaurantId,available,count,oldPrice)" +
+                " VALUES(DEFAULT,?,?,?,?,?,?,?,?,?)";
+    }
+
+    @Override
+    protected void fillInsertValues(PreparedStatement st, PartyFood partyFood) throws SQLException {
+        st.setString(1, partyFood.getName());
+        st.setString(2, partyFood.getDescription());
+        st.setFloat(3, partyFood.getPopularity());
+        st.setInt(4, partyFood.getPrice());
+        st.setString(5,partyFood.getImage());
+        st.setString(6, partyFood.getRestaurantId());
+        st.setBoolean(7, partyFood.getAvailable());
+        st.setInt(8, partyFood.getCount());
+        st.setInt(9, partyFood.getOldPrice());
     }
 
     @Override
@@ -77,7 +88,7 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     }
 
     @Override
-    protected Food getDAO(ResultSet st) throws SQLException {
+    protected PartyFood getDAO(ResultSet st) throws SQLException {
         int id = st.getInt(1);
         String name = st.getString(2);
         String description = st.getString(3);
@@ -86,31 +97,22 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         String image = st.getString(6);
         String restaurantId = st.getString(7);
         boolean available = st.getBoolean(8);
-        return new Food(id, name, description, popularity, price, image, restaurantId, available);
+        int count = st.getInt(9);
+        int oldPrice = st.getInt(10);
+        return new PartyFood(id, name, description, popularity, price, image, restaurantId, available, count, oldPrice);
     }
 
     @Override
-    protected ArrayList<Food> getDAOList(ResultSet rs) throws SQLException {
-        ArrayList<Food> foods = new ArrayList<>();
+    protected ArrayList getDAOList(ResultSet rs) throws SQLException {
+        ArrayList<PartyFood> partyFoods = new ArrayList<>();
         while (rs.next()){
-            foods.add(this.getDAO(rs));
+            partyFoods.add(this.getDAO(rs));
         }
-        return foods;
+        return partyFoods;
     }
 
     @Override
-    protected void fillInsertValues(PreparedStatement st, Food food) throws SQLException {
-        st.setString(1, food.getName());
-        st.setString(2, food.getDescription());
-        st.setFloat(3, food.getPopularity());
-        st.setInt(4, food.getPrice());
-        st.setString(5,food.getImage());
-        st.setString(6, food.getRestaurantId());
-        st.setBoolean(7, food.getAvailable());
-    }
-
-    @Override
-    public ArrayList<Food> findAll(String restaurantId) throws SQLException {
+    public ArrayList<PartyFood> findAll(String restaurantId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindAllStatement());
         st.setString(1, restaurantId);
@@ -119,48 +121,40 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
             if (resultSet.isClosed()) {
                 st.close();
                 con.close();
-                return new ArrayList<Food>();
+                return new ArrayList<PartyFood>();
             }
-            ArrayList<Food> result = getDAOList(resultSet);
+            ArrayList<PartyFood> result = getDAOList(resultSet);
             st.close();
             con.close();
             return result;
         } catch (SQLException e) {
-            System.out.println("error in FoodMapper.findAll query.");
+            System.out.println("error in PartyFoodMapper.findAll query.");
             st.close();
             con.close();
             throw e;
         }
     }
 
-    private String getFindStatement(String name, String restaurantId) {
-        String query = "SELECT * FROM food WHERE\n" +
-                "name = " + String.format("'%s'", name) + "AND \n" +
-                "restaurantId = " + String.format("'%s'", restaurantId) + ";";
-        return query;
+    @Override
+    public String getCancelAllStatement() throws SQLException {
+        return "UPDATE partyFood" +
+                "SET available = 0";
     }
 
-    public ArrayList<Food> find(String name, String restaurantId) throws SQLException {
+    @Override
+    public void cancelAll() throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindStatement(name, restaurantId));
+        PreparedStatement st = con.prepareStatement(getCancelAllStatement());
 
         try {
-            ResultSet resultSet = st.executeQuery();
-            if (resultSet.isClosed()) {
-                st.close();
-                con.close();
-                return new ArrayList<Food>();
-            }
-            ArrayList<Food> result = getDAOList(resultSet);
+            st.executeUpdate();
             st.close();
             con.close();
-            return result;
         } catch (SQLException e) {
-            System.out.println("error in FoodMapper.findBy name & resaurantId query.");
+            System.out.println("error in FoodMapper: cancel all query.");
             st.close();
             con.close();
             throw e;
         }
     }
-
 }

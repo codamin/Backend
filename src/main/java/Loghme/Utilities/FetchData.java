@@ -1,5 +1,6 @@
 package Loghme.Utilities;
 
+import Loghme.entities.PartyFood;
 import Loghme.entities.Restaurant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,35 +14,49 @@ import java.util.List;
 
 public class FetchData {
 
-    public static String request(String urlAddress) throws IOException {
-        URL url = new URL(urlAddress);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.getResponseCode();
+    public static String request(String urlAddress) {
+        String result = null;
+        try {
+            URL url = new URL(urlAddress);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.getResponseCode();
 
-        BufferedReader inStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = inStream.readLine()) != null) {
-            content.append(inputLine);
+            BufferedReader inStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = inStream.readLine()) != null) {
+                content.append(inputLine);
+            }
+            result = content.toString();
+            inStream.close();
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        inStream.close();
-        connection.disconnect();
-        return content.toString();
+        return result;
     }
 
     public static List<Restaurant> fetchRestaurants() {
-        String data;
+        String data = request("http://138.197.181.131:8080/restaurants");
         try {
-            data = RequestApi.request("http://138.197.181.131:8080/restaurants");
-            ObjectMapper mapper = new ObjectMapper();
-            List<Restaurant> newRestaurants = mapper.readValue(data,
-                    new TypeReference<List<Restaurant>>() {
-                    });
+            List<Restaurant> newRestaurants = new ObjectMapper().readValue(data, new TypeReference<List<Restaurant>>() {});
             return newRestaurants;
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("fetch restaurant shitted out");
+            return null;
+        }
+    }
+
+    public static List<Restaurant> fetchFoodParty() {
+        String data = request("http://138.197.181.131:8080/foodparty").replace("menu", "partyMenu");
+        try {
+            System.out.println("################################################# mapping");
+            List<Restaurant> newRestaurants = new ObjectMapper().readValue(data, new TypeReference<List<Restaurant>>() {});
+            System.out.println("#################################################" + newRestaurants.size());
+            return newRestaurants;
+        } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }
