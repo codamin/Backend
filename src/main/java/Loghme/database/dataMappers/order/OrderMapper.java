@@ -6,14 +6,13 @@ import Loghme.database.dataMappers.food.FoodMapper;
 import Loghme.database.dataMappers.order.item.OrderItemMapper;
 import Loghme.database.dataMappers.restaurant.IRestaurantMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
-import Loghme.entities.Food;
-import Loghme.entities.Order;
-import Loghme.entities.OrderItem;
-import Loghme.entities.User;
+import Loghme.database.dataMappers.user.UserMapper;
+import Loghme.entities.*;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.exceptions.NotFoundException;
 //import com.sun.tools.javac.tree.JCTree;
 
+import javax.security.auth.login.AccountExpiredException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -97,11 +96,14 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         int remMin = rs.getInt(5);
         int remSec = rs.getInt(6);
         Order order = new Order(id, userId, restaurantId, state, remMin, remSec);
-
         OrderItemMapper itemMapper = OrderItemMapper.getInstance();
-        for(OrderItem item: itemMapper.findAll(order.getId())) {////////////////\\\\\\\\
+        for(OrderItem item: itemMapper.findAll(order.getId())) {
             order.addItem(item);
         }
+        RestaurantMapper restaurantMapper = RestaurantMapper.getInstance();
+        Restaurant restaurant = restaurantMapper.find(restaurantId);
+        order.setRestaurant(restaurant);
+        order.setRestaurantName(restaurant.getName());
         return order;
     }
 
@@ -223,7 +225,71 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         }
     }
 
+    private String getSerStateStatement(String userId, String state) {
+        String query = "UPDATE IGNORE orders SET state = " + String.format("'%s'", state) + " WHERE userId = " + String.format("'%s'", userId) + " AND state = " + String.format("'%s'", "nf") + ";";
+        System.out.println(query);
+        return query;
+    }
+
+    private void handleFinalize(String userId) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getSerStateStatement(userId, "finalized"));
+        try {
+            st.executeUpdate();
+            st.close();
+            con.close();
+            return;
+        } catch (SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public void finalizeCart(String userId) {
-        
+        try {
+            Order order = getCart(userId);
+            if(order.getId() == null) {
+                throw new ForbiddenException("there is no order to finalize");
+            }
+            int price = order.getFinalPrice();
+            UserMapper userMapper = UserMapper.getInstance();
+            int credit = userMapper.find(userId).getCredit();
+            if(credit < price)
+                throw new ForbiddenException("You do not have enough credit to purchase.");
+            userMapper.addCredit(userId, -price);
+            handleFinalize(userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFindAllStatement(String userId) {
+        String query = "SELECT * FROM orders WHERE userId = " + String.format("'%s'", userId) + ";";
+        System.out.println(query);
+        return query;
+    }
+
+    public ArrayList<Order> findAll(String userId) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindAllStatement(userId));
+        try {
+            ResultSet rs = st.executeQuery();
+            if(rs.isClosed()) {
+                st.close();
+                con.close();
+                return new ArrayList<Order>();
+            }
+            ArrayList<Order> result = getDAOList(rs);
+            st.close();
+            con.close();
+            return result;
+        } catch(SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

@@ -39,6 +39,6 @@ public class CartService {
 
     public static void finalizeCart(String userId) {
         OrderMapper orderMapper = OrderMapper.getInstance();
-        OrderMapper.finalizeCart(userId);
+        orderMapper.finalizeCart(userId);
     }
 }
