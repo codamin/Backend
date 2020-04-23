@@ -10,10 +10,10 @@ import java.util.List;
 
 public class RestaurantService {
 
-    public static ArrayList<Restaurant> getRestaurantsList(String restaurantSearch, String foodSearch) throws SQLException {
+    public static ArrayList<Restaurant> getRestaurantsList(int page, int items, String restaurantSearch, String foodSearch) throws SQLException {
         ArrayList<Restaurant> result = new ArrayList<Restaurant>();
         RestaurantMapper mapper = RestaurantMapper.getInstance();
-        result = restaurantSearch == null && foodSearch == null ? mapper.findAll() : mapper.search(restaurantSearch, foodSearch);
+        result = restaurantSearch == null && foodSearch == null ? mapper.findAll(page, items) : mapper.search(page, items, restaurantSearch, foodSearch);
         return result;
     }
 

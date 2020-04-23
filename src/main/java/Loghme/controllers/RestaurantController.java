@@ -12,9 +12,14 @@ import java.util.ArrayList;
 public class RestaurantController {
 
     @GetMapping
-    public ArrayList<Restaurant> getRestaurants(@RequestParam(value = "restaurantSearch", required = false)
-            String restaurantSearch, @RequestParam(value = "foodSearch", required = false) String foodSearch) throws SQLException {
-        return RestaurantService.getRestaurantsList(restaurantSearch, foodSearch);
+    public ArrayList<Restaurant> getRestaurants(
+            @RequestParam(value = "restaurantSearch", required = false) String restaurantSearch,
+            @RequestParam(value = "foodSearch", required = false) String foodSearch,
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "items") int items) throws SQLException {
+        System.out.println("food search = " + foodSearch);
+        System.out.println("rest search = " + restaurantSearch);
+        return RestaurantService.getRestaurantsList(page, items, restaurantSearch, foodSearch);
     }
 
     @GetMapping("/{restaurantId}")

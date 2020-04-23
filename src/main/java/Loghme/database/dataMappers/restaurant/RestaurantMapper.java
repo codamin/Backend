@@ -79,9 +79,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         }
     }
 
-    public ArrayList<Restaurant> search(String restaurantSearch, String foodSearch) throws SQLException {
+    public ArrayList<Restaurant> search(int page, int items, String restaurantSearch, String foodSearch) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getSearchStatement(restaurantSearch, foodSearch));
+        PreparedStatement st = con.prepareStatement(getSearchStatement(page, items, restaurantSearch, foodSearch));
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {
@@ -94,7 +94,7 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
             con.close();
             return result;
         } catch (SQLException e) {
-            System.out.println("error in Mapper.findAll query.");
+            System.out.println("error in Mapper.search query.");
             st.close();
             con.close();
             throw e;
@@ -112,22 +112,32 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                 "WHERE r.id = " + String.format("'%s'", id);
     }
 
-    protected String getSearchStatement(String restaurantSearch, String foodSearch) {
+    @Override
+    protected String getFindAllStatement() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String getSearchStatement(int page, int items, String restaurantSearch, String foodSearch) {
         String x = "SELECT * " +
                 "FROM restaurant r " +
                 "WHERE r.name LIKE " + "'%" + (restaurantSearch == null ? "" : restaurantSearch.toLowerCase()) + "%'" +
                 "AND EXISTS(SELECT * " +
                 "FROM food f " +
                 "WHERE f.restaurantID = r.id AND f.name LIKE " + "'%" + (foodSearch == null ? "" :
-                foodSearch.toLowerCase()) + "%')";
+                foodSearch.toLowerCase()) + "%') " +
+                "LIMIT " + Integer.toString(items) + " " +
+                "OFFSET " + Integer.toString(items*(page-1));
         System.out.println(x);
         return x;
     }
 
     @Override
-    protected String getFindAllStatement() throws SQLException {
+    public String getFindAllStatement(int page, int items) throws SQLException {
         return "SELECT * " +
-                "FROM restaurant";
+                "FROM restaurant " +
+                "LIMIT " + Integer.toString(items) + " " +
+                "OFFSET " + Integer.toString(items*(page-1));
     }
 
     @Override
@@ -174,5 +184,29 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
             restaurants.add(this.getDAO(rs));
         }
         return restaurants;
+    }
+
+    @Override
+    public ArrayList<Restaurant> findAll(int page, int items) throws SQLException {
+        System.out.println("yes it is called");
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindAllStatement(page, items));
+        try {
+            ResultSet resultSet = st.executeQuery();
+            if (resultSet.isClosed()) {
+                st.close();
+                con.close();
+                return new ArrayList<Restaurant>();
+            }
+            ArrayList<Restaurant> result = getDAOList(resultSet);
+            st.close();
+            con.close();
+            return result;
+        } catch (SQLException e) {
+            System.out.println("error in Mapper.findAll query.");
+            st.close();
+            con.close();
+            throw e;
+        }
     }
 }

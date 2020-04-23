@@ -45,13 +45,13 @@ public class DatabaseListener {
         }
     }
 
-    @Scheduled(fixedDelay = 5000)
-    public static void addFoodParty() throws SQLException {
-        List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
-        System.out.println("after mapping..." + partyRestaurants.size());
-        PartyFoodMapper.getInstance().cancelAll();
-        for(Restaurant restaurant: partyRestaurants) {
-            RestaurantMapper.getInstance().insert(restaurant);
-        }
-    }
+//    @Scheduled(fixedDelay = 5000)
+//    public static void addFoodParty() throws SQLException {
+//        List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
+//        System.out.println("after mapping..." + partyRestaurants.size());
+//        PartyFoodMapper.getInstance().cancelAll();
+//        for(Restaurant restaurant: partyRestaurants) {
+//            RestaurantMapper.getInstance().insert(restaurant);
+//        }
+//    }
 }
