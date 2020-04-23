@@ -1,7 +1,6 @@
 package Loghme.controllers;
 
 import Loghme.database.dataMappers.user.UserMapper;
-import Loghme.entities.IeatRepository;
 import Loghme.entities.User;
 import Loghme.requests.AddCredit;
 import org.springframework.web.bind.annotation.*;

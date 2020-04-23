@@ -2,7 +2,6 @@ package Loghme.services;
 
 import Loghme.database.dataMappers.order.OrderMapper;
 import Loghme.entities.Cart;
-import Loghme.entities.IeatRepository;
 import Loghme.entities.Order;
 import Loghme.requests.DeleteFromCart;
 
@@ -39,6 +38,6 @@ public class CartService {
 
     public static void finalizeCart(String userId) {
         OrderMapper orderMapper = OrderMapper.getInstance();
-        OrderMapper.finalizeCart(userId);
+//        OrderMapper.finalizeCart(userId);
     }
 }

@@ -29,7 +29,7 @@ public class IeatRepository {
         orderId = 0;
 //        orderRepository = new OrderRepository();
         initDatabase();
-        requestFoodPartyData();
+//        requestFoodPartyData();
     }
 
     public FoodPartyTimer getFoodPartyTimer() {
@@ -226,12 +226,12 @@ public class IeatRepository {
 //        orderRepository.clear();
     }
 
-    public void requestFoodPartyData() {
-        foodPartyTimer.startTimer();
-        TimerTask handleFoodPartyPeriodic = new HandleFoodPartyPeriodic(restaurants);
-        Timer requestTimer = new Timer();
-        requestTimer.schedule(handleFoodPartyPeriodic, 0, foodPartyTimer.getUpdatePeriod() * 1000); //every 3 secs
-    }
+//    public void requestFoodPartyData() {
+//        foodPartyTimer.startTimer();
+//        TimerTask handleFoodPartyPeriodic = new HandleFoodPartyPeriodic(restaurants);
+//        Timer requestTimer = new Timer();
+//        requestTimer.schedule(handleFoodPartyPeriodic, 0, foodPartyTimer.getUpdatePeriod() * 1000); //every 3 secs
+//    }
 
     public ArrayList<PartyFood> getParty() {
         ArrayList<PartyFood> ans = new ArrayList<PartyFood>();

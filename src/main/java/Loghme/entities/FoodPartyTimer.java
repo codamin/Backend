@@ -30,10 +30,8 @@ public class FoodPartyTimer {
     }
     public void decrementRemainingTime() {
         remainingTime--;
-    }
-    public void startTimer() {
-        TimerTask handleFoodPartyRemainingTime = new HandleFoodPartyRemainingTime();
-        Timer remainingTimer = new Timer();
-        remainingTimer.schedule(handleFoodPartyRemainingTime, 0, 1 * 1000); //every 300 secs
+        if(remainingTime == 0)
+            remainingTime = updatePeriod;
+        System.out.println(remainingTime);
     }
 }
