@@ -2,6 +2,8 @@ package Loghme.database.dataMappers.user;
 
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
+import Loghme.database.dataMappers.order.OrderMapper;
+import Loghme.entities.Order;
 import Loghme.entities.Restaurant;
 import Loghme.entities.User;
 
@@ -84,6 +86,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     @Override
     protected String getFindStatement(String id) {
         String query = "SELECT * FROM user WHERE email = \"" + id + "\";";
+        System.out.println(query);
         return query;
     }
 
@@ -104,7 +107,17 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     @Override
     protected User getDAO(ResultSet rs) throws SQLException {
-        return null;
+        String fname = rs.getString(1);
+        String lname = rs.getString(2);
+        String phone = rs.getString(3);
+        String id = rs.getString(4);
+        int credit = rs.getInt(5);
+        User user = new User(fname, lname, phone, id, credit);
+        OrderMapper orderMapper = OrderMapper.getInstance();
+        for(Order order: orderMapper.findAll(id)) {
+            user.getOrderRepository().addOrder(order);
+        }
+        return user;
     }
 
     @Override
@@ -112,19 +125,15 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         return null;
     }
 
-    protected String getAddCreditStatment() {
-        return "UPDATE TABLE user SET credit = credit + ? + WHERE email = \"?\"";
+    protected String getAddCreditStatment(String id, Integer amount) {
+        String query = "UPDATE IGNORE user SET credit = credit + " + String.valueOf(amount) + " WHERE email = " + String.format("'%s'", id) + ";";
+        System.out.println(query);
+        return query;
     }
 
-    protected void fillAddCreditStatement(PreparedStatement st, String id, Integer amount) throws SQLException {
-        st.setInt(1, amount);
-        st.setString(2, id);
-    }
-
-    public void addCredit(String id, Integer amount) throws SQLException {
+    public void addCredit(String id, int amount) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getAddCreditStatment());
-        fillAddCreditStatement(st, id, amount);
+        PreparedStatement st = con.prepareStatement(getAddCreditStatment(id, amount));
         try {
             st.execute();
             st.close();
@@ -135,4 +144,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
             e.printStackTrace();
         }
     }
+
+//    public
 }

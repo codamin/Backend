@@ -126,7 +126,6 @@ public class Order {
 
     public int getFinalPrice() {
         int price = 0;
-
         for(OrderItem orderItem : orderItems)
             price += orderItem.getPrice();
 
