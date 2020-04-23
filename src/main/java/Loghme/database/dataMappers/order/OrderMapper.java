@@ -83,7 +83,9 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
 
     @Override
     protected String getDeleteStatement(Integer id) {
-        return null;
+        String query = "DELETE FROM orders WHERE id = " + String.valueOf(id) + ";";
+        System.out.println(query);
+        return query;
     }
 
     @Override
@@ -94,7 +96,13 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         String state = rs.getString(4);
         int remMin = rs.getInt(5);
         int remSec = rs.getInt(6);
-        return new Order(id, userId, restaurantId, state, remMin, remSec);
+        Order order = new Order(id, userId, restaurantId, state, remMin, remSec);
+
+        OrderItemMapper itemMapper = OrderItemMapper.getInstance();
+        for(OrderItem item: itemMapper.findAll(order.getId())) {////////////////\\\\\\\\
+            order.addItem(item);
+        }
+        return order;
     }
 
     @Override
@@ -125,15 +133,17 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
 
     public boolean insertCart(String userId, String restaurantId) throws SQLException {
         System.out.println("add new cart");
-        boolean result;
+        int result;
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertCartStatement());
         fillInsertCartValues(st, userId, restaurantId);
         try {
-            result = st.execute();
+            result = st.executeUpdate();
+            System.out.println("here result");
+            System.out.println(result);
             st.close();
             con.close();
-            return result;
+            return result > 0;
         } catch (Exception e) {
             st.close();
             con.close();
@@ -151,7 +161,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
     }
 
     public Order getCart(String userId) throws SQLException {
-        System.out.println("finding cart");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getCartStatment(userId));
         try {
@@ -160,23 +169,18 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
                 st.close();
                 con.close();
                 System.out.println("rs is closed on search for not finalized order");
-                return null;
+                return new Order();
             }
-            System.out.println("to get dao lists");
             ArrayList<Order> orders = getDAOList(rs);
             st.close();
             con.close();
-            System.out.println("get size");
-            System.out.println(orders.size());
-            if(orders.size() == 0)
-                return null;
+            if(orders.size() == 0) {
+                System.out.println("Order Mapper found orders size 0");
+                return new Order();
+            }
             else {
-                Order order = orders.get(0);
-                OrderItemMapper itemMapper = OrderItemMapper.getInstance();
-                for(OrderItem item: itemMapper.findAll(order.getId())) {
-                    order.addItem(item);
-                }
-                return order;
+                System.out.println("Order Mapper found orders size more than 0");
+                return orders.get(0);
             }
         } catch (SQLException e) {
             System.out.println("error in find the not finalized order");
@@ -191,16 +195,15 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         Order order = null;
         try {
             order = getCart(userId);
-            if(order == null) {
+            if(order.getId() == null) {
                 System.out.println("cart found as null");
                 boolean resp = insertCart(userId, restaurantId);
+                System.out.println("our resp is ");
+                System.out.println(resp);
                 if(!resp)
                     return;
-                order = getCart(userId);
             }
-            System.out.println("found order");
-            System.out.println(order.getId());
-            System.out.println(order.getRestaurantId());
+            order = getCart(userId);
             if(!order.getRestaurantId().equals(restaurantId))
                 throw new ForbiddenException("The restaurant of the food does not match the current cart restaurant.");
             FoodMapper foodMapper = FoodMapper.getInstance();
@@ -218,5 +221,9 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void finalizeCart(String userId) {
+        
     }
 }

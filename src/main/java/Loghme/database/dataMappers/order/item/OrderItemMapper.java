@@ -2,8 +2,11 @@ package Loghme.database.dataMappers.order.item;
 
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
+import Loghme.database.dataMappers.food.FoodMapper;
 import Loghme.database.dataMappers.order.IOrderMapper;
+import Loghme.database.dataMappers.order.OrderMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
+import Loghme.entities.Food;
 import Loghme.entities.Order;
 import Loghme.entities.OrderItem;
 //import com.sun.org.apache.xalan.internal.xsltc.trax.XSLTCSource;
@@ -46,6 +49,39 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         con.close();
     }
 
+    private String getDeleteStatement(int orderId, int foodId) {
+        String query = "DELETE FROM orderItem WHERE orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
+        return query;
+    }
+
+    private boolean delete(int orderId, int foodId) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getDeleteStatement(orderId, foodId));
+        try {
+            int result = st.executeUpdate();
+            if(result <= 0) {
+                con.close();
+                st.close();
+                return false;
+            }
+            st.close();
+            con.close();
+            ArrayList<OrderItem> items = findAll(orderId);
+            if(items.size() > 0) {
+
+                return true;
+            }
+            OrderMapper orderMapper = OrderMapper.getInstance();
+            orderMapper.delete(orderId);
+            return true;
+        } catch (SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     @Override
     protected String getFindStatement(Integer id) {
         return null;
@@ -77,7 +113,10 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         int orderId = rs.getInt(1);
         int foodId = rs.getInt(2);
         int num = rs.getInt(3);
-        OrderItem item = new OrderItem(orderId, foodId, num);
+
+        FoodMapper foodMapper = FoodMapper.getInstance();
+        Food food = foodMapper.find(foodId);
+        OrderItem item = new OrderItem(orderId, foodId, num, food);
         return item;
     }
 
@@ -108,9 +147,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
 //        con.close();
         return result;
     }
-
-//    private void fillInsertValues(PreparedStatement st, OrderItem orderItem) {
-//    }
 
     private String getFindStatement(int orderId, int foodId) {
         String query = "SELECT * FROM orderItem WHERE\n" +
@@ -159,6 +195,47 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         return query;
     }
 
+    private String getGetNubmerStatement(int orderId, int foodId) {
+        String query = "SELECT num FROM orderItem WHERE orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
+        System.out.println(query);
+        return query;
+    }
+
+    private int getNumber(int orderId, int foodId) throws SQLException {
+        int resp = 0;
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getGetNubmerStatement(orderId, foodId));
+        try {
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                resp = rs.getInt(1);
+                st.close();
+                con.close();
+                return resp;
+            }
+            else {
+                st.close();
+                con.close();
+                return 0;
+            }
+        } catch (SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    private boolean handleDeleteFromCart(int orderId, int foodId) throws SQLException {
+        System.out.println("handling decrease from cart");
+        int num = getNumber(orderId, foodId);
+        System.out.println(num);
+        if(num > 0)
+            return true;
+        boolean result = delete(orderId, foodId);
+        return true;
+    }
+
     private boolean changeNumber(int orderId, int foodId, int number) throws SQLException {
         boolean result;
         Connection con = ConnectionPool.getConnection();
@@ -167,6 +244,9 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
             result = st.execute();
             st.close();
             con.close();
+            if(number < 0) {
+                handleDeleteFromCart(orderId, foodId);
+            }
             return result;
         } catch(SQLException e) {
             st.close();

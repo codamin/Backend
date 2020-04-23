@@ -50,9 +50,11 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
 
     @Override
     protected String getFindStatement(Integer id) {
-        return "SELECT * " +
-                "FROM food f" +
-                "WHERE f.id = " + id.toString();
+        String query = "SELECT * " +
+                "FROM food \n" +
+                "WHERE id = " + id.toString() + ";";
+        System.out.println(query);
+        return query;
     }
 
     @Override
@@ -143,7 +145,6 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     public ArrayList<Food> find(String name, String restaurantId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindStatement(name, restaurantId));
-
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {
@@ -159,6 +160,32 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
             System.out.println("error in FoodMapper.findBy name & resaurantId query.");
             st.close();
             con.close();
+            throw e;
+        }
+    }
+
+    public Food find(int id) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindStatement(id));
+        try {
+            ResultSet resultSet = st.executeQuery();
+            if(resultSet.isClosed()) {
+                st.close();
+                con.close();
+                return null;
+            }
+            ArrayList<Food> result = getDAOList(resultSet);
+            st.close();
+            con.close();
+            if(result.size() > 0)
+                return result.get(0);
+            else
+                return null;
+        } catch (SQLException e) {
+            System.out.println("error in FoodMapper.findBy id query.");
+            st.close();
+            con.close();
+            e.printStackTrace();
             throw e;
         }
     }
