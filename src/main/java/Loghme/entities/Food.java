@@ -5,7 +5,7 @@ public class Food {
     public Food() {
     }
 
-    public Food(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean available) {
+    public Food(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean party) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -13,7 +13,8 @@ public class Food {
         this.price = price;
         this.image = image;
         this.restaurantId = restaurantId;
-        this.available = available;
+        this.available = true;
+        this.party = party;
     }
 
     public int getId() {
@@ -33,6 +34,7 @@ public class Food {
     private String restaurantName;
     private String restaurantId;
     private boolean available = true;
+    private boolean party = false;
 
     public void decrement() {
         System.out.println("failed dec called ;((");
@@ -107,6 +109,10 @@ public class Food {
 
     public boolean getAvailable() {
         return this.available;
+    }
+
+    public boolean isParty() {
+        return false;
     }
 }
 

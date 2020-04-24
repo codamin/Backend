@@ -266,7 +266,7 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
     }
 
     private String getFindAllStatement(String userId) {
-        String query = "SELECT * FROM orders WHERE userId = " + String.format("'%s'", userId) + ";";
+        String query = "SELECT * FROM orders WHERE userId = " + String.format("'%s'", userId) + " AND state <> 'nf';";
         System.out.println(query);
         return query;
     }

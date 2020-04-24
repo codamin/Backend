@@ -1,5 +1,6 @@
 package Loghme.controllers;
 
+import Loghme.database.dataMappers.food.party.PartyMapper;
 import Loghme.entities.FoodPartyTimer;
 import Loghme.entities.PartyFood;
 import Loghme.services.FoodPartyService;
@@ -14,10 +15,11 @@ import java.util.ArrayList;
 @RequestMapping("/party")
 public class FoodPartyController {
 
-//    @GetMapping
-//    public ArrayList<PartyFood> getParty() throws SQLException {
-//        return FoodPartyService.getFoodPartyFoods();
-//    }
+    @GetMapping
+    public ArrayList<PartyFood> getParty() throws SQLException {
+        PartyMapper partyMapper = PartyMapper.getInstance();
+        return partyMapper.findAll();
+    }
 
 //    @GetMapping("/time")
 //    public FoodPartyTimer getTime() {

@@ -1,6 +1,7 @@
 package Loghme.database;
 
 import Loghme.Utilities.FetchData;
+import Loghme.database.dataMappers.food.party.PartyMapper;
 import Loghme.database.dataMappers.order.OrderMapper;
 import Loghme.database.dataMappers.order.item.OrderItemMapper;
 import Loghme.database.dataMappers.partyFood.PartyFoodMapper;
@@ -45,13 +46,14 @@ public class DatabaseListener {
         }
     }
 
-//    @Scheduled(fixedDelay = 5000)
-//    public static void addFoodParty() throws SQLException {
-//        List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
+    @Scheduled(fixedDelay = 60 * 10) // 10 min
+    public static void addFoodParty() throws SQLException {
+        List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
 //        System.out.println("after mapping..." + partyRestaurants.size());
-//        PartyFoodMapper.getInstance().cancelAll();
-//        for(Restaurant restaurant: partyRestaurants) {
-//            RestaurantMapper.getInstance().insert(restaurant);
-//        }
-//    }
+        PartyMapper partyMapper = PartyMapper.getInstance();
+        partyMapper.expireAll();
+        for(Restaurant restaurant: partyRestaurants) {
+            RestaurantMapper.getInstance().insert(restaurant);
+        }
+    }
 }

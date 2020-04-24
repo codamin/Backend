@@ -5,13 +5,15 @@ public class PartyFood extends Food {
     private int count;
     private int oldPrice;
 
-    public PartyFood(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean available) {
-        super(id, name, description, popularity, price, image, restaurantId, available);
+    public PartyFood() {}
+
+    public PartyFood(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean party) {
+        super(id, name, description, popularity, price, image, restaurantId, party);
     }
 
     public PartyFood(int id, String name, String description, float popularity, int price, String image,
-                     String restaurantId, boolean available, int count, int oldPrice) {
-        super(id, name, description, popularity, price, image, restaurantId, available);
+                     String restaurantId, boolean party, int count, int oldPrice) {
+        super(id, name, description, popularity, price, image, restaurantId, party);
         this.count = count;
         this.oldPrice = oldPrice;
     }
@@ -43,5 +45,10 @@ public class PartyFood extends Food {
 
     @Override
     public boolean isAvailable() {return count > 0;}
+
+    @Override
+    public boolean isParty() {
+        return true;
+    }
 
 }

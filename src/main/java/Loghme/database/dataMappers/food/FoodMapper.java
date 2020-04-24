@@ -2,8 +2,10 @@ package Loghme.database.dataMappers.food;
 
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
+import Loghme.database.dataMappers.food.party.PartyMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
 import Loghme.entities.Food;
+import Loghme.entities.PartyFood;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +16,6 @@ import java.util.ArrayList;
 public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
 
     private static FoodMapper instance;
-
     static {
         try {
             instance = new FoodMapper();
@@ -22,22 +23,20 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
             e.printStackTrace();
         }
     }
-
     public static FoodMapper getInstance() {
         return instance;
     }
-
     private FoodMapper() throws SQLException {
         Connection con = ConnectionPool.getConnection();
         String query = "CREATE TABLE IF NOT EXISTS food (" +
                 "id INTEGER NOT NULL AUTO_INCREMENT," +
                 "name VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "description VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
-                "popularity INTEGER," +
+                "popularity FLOAT," +
                 "price INTEGER," +
                 "image VARCHAR(200)," +
                 "restaurantId VARCHAR(24)," +
-                "available INTEGER ," +
+                "party BOOLEAN," +
                 "PRIMARY KEY(id)," +
                 "FOREIGN KEY(restaurantId) REFERENCES restaurant(id)" +
                 ");";
@@ -46,6 +45,36 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
+    }
+
+    public boolean insert(PartyFood food) throws SQLException {
+        boolean result;
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getInsertStatement());
+        fillInsertValues(st, food);
+        try {
+            result = st.execute();
+            st.close();
+            con.close();
+        } catch (SQLException e) {
+            System.out.println("error in Mapper.insert query.");
+            st.close();
+            con.close();
+            e.printStackTrace();
+            return false;
+        }
+        System.out.println("if food is party");
+        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        System.out.println(food.isParty());
+        if(!food.isParty())
+            return result;
+        ArrayList<Food> foods = find(food.getName(), food.getRestaurantId());
+        if(foods.size() == 0)
+            return false;
+        int foodId = foods.get(0).getId();
+        PartyMapper partyMapper = PartyMapper.getInstance();
+        result = partyMapper.insert(foodId, food.getOldPrice(), food.getCount());
+        return result;
     }
 
     @Override
@@ -69,7 +98,7 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT IGNORE INTO food(id,name,description,popularity,price,image,restaurantId,available)" +
+        return "INSERT IGNORE INTO food(id,name,description,popularity,price,image,restaurantId,party)" +
                 " VALUES(DEFAULT,?,?,?,?,?,?,?)";
     }
 
@@ -87,8 +116,8 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         int price = st.getInt(5);
         String image = st.getString(6);
         String restaurantId = st.getString(7);
-        boolean available = st.getBoolean(8);
-        return new Food(id, name, description, popularity, price, image, restaurantId, available);
+        boolean party = st.getBoolean(8);
+        return new Food(id, name, description, popularity, price, image, restaurantId, party);
     }
 
     @Override
@@ -108,7 +137,7 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         st.setInt(4, food.getPrice());
         st.setString(5,food.getImage());
         st.setString(6, food.getRestaurantId());
-        st.setBoolean(7, food.getAvailable());
+        st.setBoolean(7, food.isParty());
     }
 
     @Override

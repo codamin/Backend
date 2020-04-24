@@ -62,11 +62,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
             for(Food food: restaurant.getMenu()) {
                 foodMapper.insert(food);
             }
-            PartyFoodMapper partyFoodMapper = PartyFoodMapper.getInstance();
-            System.out.println("*******************************inserting food parties***********************");
-            System.out.println("^^^^^^^^^^^^^fp size = " + restaurant.getPartyMenu().size());
+
             for(PartyFood partyFood: restaurant.getPartyMenu()) {
-                partyFoodMapper.insert(partyFood);
+                foodMapper.insert(partyFood);
             }
             st.close();
             con.close();
