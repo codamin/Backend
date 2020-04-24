@@ -3,8 +3,10 @@ package Loghme.database.dataMappers.food.party;
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
 import Loghme.database.dataMappers.food.FoodMapper;
+import Loghme.database.dataMappers.restaurant.RestaurantMapper;
 import Loghme.entities.Food;
 import Loghme.entities.PartyFood;
+import Loghme.entities.Restaurant;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,7 +55,9 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
 
     @Override
     protected String getFindStatement(Integer id) {
-        return null;
+        String query = "SELECT * FROM party WHERE id = " + String.valueOf(id) + ";";
+//        System.out.println(query);
+        return query;
     }
 
     @Override
@@ -76,7 +80,9 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         boolean expired = rs.getBoolean(4);
         FoodMapper foodMapper = FoodMapper.getInstance();
         Food food = foodMapper.find(id);
-        PartyFood resp = new PartyFood(id, food.getName(), food.getDescription(), food.getPopularity(), food.getPrice(), food.getImage(), food.getRestaurantId(), true, count, oldPrice, expired);
+        RestaurantMapper restaurantMapper = RestaurantMapper.getInstance();
+        Restaurant restaurant = restaurantMapper.find(food.getRestaurantId());
+        PartyFood resp = new PartyFood(id, food.getName(), food.getDescription(), food.getPopularity(), food.getPrice(), food.getImage(), food.getRestaurantId(), restaurant.getName(), true, count, oldPrice, expired);
         return resp;
     }
 
@@ -175,5 +181,50 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         }
     }
 
-
+    private String getFuck(int id) {
+        String query = "SELECT * FROM party WHERE id = " + String.valueOf(id) + ";";
+        System.out.println(query);
+        return query;
+    }
+    public PartyFood find(int id) throws SQLException {
+        System.out.println("here");
+//        Connection con = ConnectionPool.getConnection();
+        Connection con = ConnectionPool.getConnection();
+        System.out.println("here");
+        PreparedStatement st = con.prepareStatement(getFindStatement(id));
+        System.out.println("here");
+        ResultSet rs;
+        System.out.println("here");
+        try {
+            System.out.println("here");
+            rs = st.executeQuery();
+            System.out.println("here");
+            if(rs.isClosed()) {
+                System.out.println("here");
+                st.close();
+                System.out.println("here");
+                con.close();
+                return null;
+            }
+            System.out.println("here2");
+            ArrayList<PartyFood> foods = getDAOList(rs);
+            System.out.println("here");
+            if(foods.size() <= 0) {
+                System.out.println("here");
+                st.close();
+                con.close();
+                return null;
+            }
+            System.out.println("here");
+            st.close();
+            con.close();
+            return foods.get(0);
+        } catch (SQLException e) {
+            System.out.println("here");
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

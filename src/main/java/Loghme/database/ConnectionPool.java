@@ -24,7 +24,7 @@ public class ConnectionPool {
         connectionPool.setMinPoolSize(5);
         connectionPool.setAcquireIncrement(5);
         connectionPool.setMaxPoolSize(20);
-        connectionPool.setMaxStatements(100);
+        connectionPool.setMaxStatements(100000);
 
     }
 

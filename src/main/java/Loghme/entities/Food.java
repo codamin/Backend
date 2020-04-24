@@ -16,7 +16,7 @@ public class Food {
     public Food() {
     }
 
-    public Food(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean _party) {
+    public Food(int id, String name, String description, float popularity, int price, String image, String restaurantId, String restaurantName, boolean _party) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -24,6 +24,7 @@ public class Food {
         this.price = price;
         this.image = image;
         this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
         this.available = true;
         this.party = _party;
     }
@@ -112,7 +113,16 @@ public class Food {
     }
 
     public boolean isParty() {
-        return false;
+        return this.party;
     }
+
+    public int getCount() {
+        return 0;
+    }
+
+    public void setParty(boolean val) {
+        party = val;
+    }
+
 }
 

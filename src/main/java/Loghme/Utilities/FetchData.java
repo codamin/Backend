@@ -1,5 +1,6 @@
 package Loghme.Utilities;
 
+import Loghme.entities.Delivery;
 import Loghme.entities.PartyFood;
 import Loghme.entities.Restaurant;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FetchData {
@@ -59,5 +61,17 @@ public class FetchData {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<Delivery> fetchDelivery() {
+        String data = request("http://138.197.181.131:8080/deliveries");
+        List<Delivery> deliveries = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            deliveries = mapper.readValue(data, new TypeReference<List<Delivery>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return deliveries;
     }
 }

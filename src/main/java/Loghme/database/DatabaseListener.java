@@ -39,21 +39,29 @@ public class DatabaseListener {
         OrderItemMapper.getInstance();
     }
 
-    private static void addRestaurants() throws SQLException {
+    private static void addRestaurants() {
         List<Restaurant> restaurants = FetchData.fetchRestaurants();
         for(Restaurant restaurant: restaurants) {
-            RestaurantMapper.getInstance().insert(restaurant);
+            try {
+                RestaurantMapper.getInstance().insert(restaurant);
+            } catch (SQLException e) {
+                System.out.println("on insert restaurant");
+            }
         }
     }
 
-    @Scheduled(fixedDelay = 1000) // 10 min
-    public static void addFoodParty() throws SQLException {
+    @Scheduled(fixedDelay = 100000) // 10 min
+    public static void addFoodParty() {
         List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
 //        System.out.println("after mapping..." + partyRestaurants.size());
         PartyMapper partyMapper = PartyMapper.getInstance();
 //        partyMapper.expireAll();
         for(Restaurant restaurant: partyRestaurants) {
-            RestaurantMapper.getInstance().insert(restaurant);
+            try {
+                RestaurantMapper.getInstance().insert(restaurant);
+            } catch (SQLException e) {
+                System.out.println("on insert party rest");
+            }
         }
     }
 }

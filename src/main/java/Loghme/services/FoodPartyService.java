@@ -20,10 +20,7 @@ import java.util.TimerTask;
 public class FoodPartyService {
     private static FoodPartyTimer foodPartyTimer = FoodPartyTimer.getInstance();
 
-//    public static ArrayList<PartyFood> getFoodPartyFoods() throws SQLException {
-//        ArrayList<PartyFood> result = PartyFoodMapper.getInstance().findAll();
-//        return result;
-//    }
+//    pe
 
     public static FoodPartyTimerDTO getRemainingTime() {
         return new FoodPartyTimerDTO(foodPartyTimer);

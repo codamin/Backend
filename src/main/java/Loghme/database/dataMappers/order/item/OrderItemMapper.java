@@ -10,6 +10,7 @@ import Loghme.database.dataMappers.restaurant.RestaurantMapper;
 import Loghme.entities.Food;
 import Loghme.entities.Order;
 import Loghme.entities.OrderItem;
+import Loghme.entities.PartyFood;
 //import com.sun.org.apache.xalan.internal.xsltc.trax.XSLTCSource;
 
 import java.sql.Connection;
@@ -110,25 +111,25 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
 
     @Override
     protected OrderItem getDAO(ResultSet rs) throws SQLException {
-        System.out.println("add one dao");
         int orderId = rs.getInt(1);
         int foodId = rs.getInt(2);
         int num = rs.getInt(3);
 
         FoodMapper foodMapper = FoodMapper.getInstance();
-        PartyMapper partyMapper = PartyMapper.getInstance();
         Food food = foodMapper.find(foodId);
-        if(food.isParty())
-            food = partyMapper.find(foodId);
-        OrderItem item = new OrderItem(orderId, foodId, num, food);
-        return item;
+        if(food.isParty()) {
+            food.setParty(true);
+            return new OrderItem(orderId, foodId, num, food);
+        }
+        else {
+            OrderItem item = new OrderItem(orderId, foodId, num, food);
+            return item;
+        }
     }
 
     @Override
     protected ArrayList<OrderItem> getDAOList(ResultSet rs) throws SQLException {
-        System.out.println("get dao list");
         ArrayList<OrderItem> resp = new ArrayList<OrderItem>();
-        System.out.println("before while");
         while(rs.next()) {
             resp.add(getDAO(rs));
         }

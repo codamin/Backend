@@ -17,13 +17,13 @@ public class PartyFood extends Food {
 
     public PartyFood() {}
 
-    public PartyFood(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean party) {
-        super(id, name, description, popularity, price, image, restaurantId, party);
+    public PartyFood(int id, String name, String description, float popularity, int price, String image, String restaurantId, String restaurantName, boolean party) {
+        super(id, name, description, popularity, price, image, restaurantId, restaurantName, party);
     }
 
     public PartyFood(int id, String name, String description, float popularity, int price, String image,
-                     String restaurantId, boolean party, int count, int oldPrice, boolean expired) {
-        super(id, name, description, popularity, price, image, restaurantId, party);
+                     String restaurantId, String restaurantName, boolean party, int count, int oldPrice, boolean expired) {
+        super(id, name, description, popularity, price, image, restaurantId, restaurantName, party);
         this.count = count;
         this.oldPrice = oldPrice;
         this.expired = expired;
@@ -45,6 +45,7 @@ public class PartyFood extends Food {
         count += 1;
     }
 
+    @Override
     public int getCount() {
         return count;
     }

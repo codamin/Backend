@@ -91,6 +91,7 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
 
     @Override
     protected Order getDAO(ResultSet rs) throws SQLException {
+        System.out.println("get dao ordermapper start");
         int id = rs.getInt(1);
         String userId = rs.getString(2);
         String restaurantId = rs.getString(3);
@@ -106,6 +107,7 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         Restaurant restaurant = restaurantMapper.find(restaurantId);
         order.setRestaurant(restaurant);
         order.setRestaurantName(restaurant.getName());
+        System.out.println("get dao ordermapper end");
         return order;
     }
 
@@ -227,15 +229,16 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         }
     }
 
-    private String getSerStateStatement(String userId, String state) {
-        String query = "UPDATE IGNORE orders SET state = " + String.format("'%s'", state) + " WHERE userId = " + String.format("'%s'", userId) + " AND state = " + String.format("'%s'", "nf") + ";";
+    private String getSetStateStatement(int orderId, String state) {
+        String query = "UPDATE IGNORE orders SET state = " + String.format("'%s'", state) + " WHERE id = " + String.valueOf(orderId) + " ;";
+//        String query = "UPDATE IGNORE orders SET state = " + String.format("'%s'", state) + " WHERE userId = " + String.format("'%s'", userId) + " AND state = " + String.format("'%s'", "nf") + ";";
         System.out.println(query);
         return query;
-    }
 
-    private void handleFinalize(String userId, Order order) throws SQLException {
+    }
+    public void setState(int orderId, String state) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getSerStateStatement(userId, "finalized"));
+        PreparedStatement st = con.prepareStatement(getSetStateStatement(orderId, state));
         try {
             st.executeUpdate();
             st.close();
@@ -246,6 +249,10 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             e.printStackTrace();
             throw e;
         }
+    }
+
+    private void handleFinalize(String userId, Order order) throws SQLException {
+        setState(order.getId(), "finalized");
         PartyMapper partyMapper = PartyMapper.getInstance();
         for(OrderItem item: order.getOrderItems()) {
             if(item.getFood().isParty()) {
@@ -260,7 +267,7 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         }
     }
 
-    public void finalizeCart(String userId) {
+    public Order finalizeCart(String userId) throws SQLException {
         PartyMapper partyMapper = PartyMapper.getInstance();
         try {
             Order order = getCart(userId);
@@ -271,14 +278,17 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             for(OrderItem item: order.getOrderItems()) {
                 System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>on first for");
                 if(item.getFood().isParty()) {
+                    System.out.println("was party");
                     System.out.println(item.getFood().isParty());
                     System.out.println("in if");
                     Food food = item.getFood();
                     PartyFood pfood = partyMapper.find(food.getId());
                     if(pfood.isExpired())
                         throw new ForbiddenException("The " + food.getName() + " has been expired.");
+                    System.out.println("two");
                     if(pfood.getCount() < item.getNumber())
-                        throw new ForbiddenException(("The " + food.getName() + " is just " + String.valueOf(pfood.getCount()) + " available."));
+                        throw new ForbiddenException("The food is just " + String.valueOf(pfood.getCount()) + " available.");
+                    System.out.println("three");
                 }
             }
             int price = order.getFinalPrice();
@@ -288,8 +298,10 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
                 throw new ForbiddenException("You do not have enough credit to purchase.");
             userMapper.addCredit(userId, -price);
             handleFinalize(userId, order);
+            return order;
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
@@ -312,6 +324,8 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             ArrayList<Order> result = getDAOList(rs);
             st.close();
             con.close();
+            System.out.println("len orders returned in findall is ");
+            System.out.println(result.size());
             return result;
         } catch(SQLException e) {
             st.close();

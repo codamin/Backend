@@ -72,8 +72,8 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         } catch (Exception e) {
             st.close();
             con.close();
-            e.printStackTrace();
-            return false;
+//            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -101,10 +101,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
 
     @Override
     protected String getFindStatement(String id) {
-        System.out.println("SELECT * " +
-                "FROM restaurant r " +
-                "WHERE r.id = " + String.format("'%s'", id));
-
         return "SELECT * " +
                 "FROM restaurant r " +
                 "WHERE r.id = " + String.format("'%s'", id);
@@ -133,7 +129,7 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     @Override
     public String getFindAllStatement(int page, int items) throws SQLException {
         return "SELECT * " +
-                "FROM restaurant " +
+                "FROM restaurant WHERE  " +
                 "LIMIT " + Integer.toString(items) + " " +
                 "OFFSET " + Integer.toString(items*(page-1));
     }

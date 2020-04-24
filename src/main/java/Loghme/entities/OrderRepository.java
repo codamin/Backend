@@ -19,10 +19,7 @@ public class OrderRepository {
     }
 
     public void addOrder(Order newOrder) {
-        orders.add(newOrder);
-//        TimerTask getDataPeriodic = new HandleDeliveriesPeriodic(newOrder);
-//        Timer timer = new Timer();
-//        timer.schedule(getDataPeriodic, 0, 3 * 1000);
+         orders.add(newOrder);
     }
 
     public Order findOrderById(int id) {

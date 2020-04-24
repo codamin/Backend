@@ -4,11 +4,14 @@ package Loghme.controllers;
 import Loghme.entities.Order;
 //import Loghme.entities.OrderItem;
 //import Loghme.requests.AddToCart;
+import Loghme.exceptions.NotFoundException;
 import Loghme.requests.DeleteFromCart;
 //import Loghme.services.CartService;
 import Loghme.requests.AddToCart;
 import Loghme.services.CartService;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/cart")
@@ -36,7 +39,13 @@ public class CartController {
 
     @PostMapping("/finalize")
     public void finalizeCart() {
-        CartService.finalizeCart("ekhamespanah@yahoo.com");
+        try {
+            System.out.println("fuck in cart controller>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>o");
+            CartService.finalizeCart("ekhamespanah@yahoo.com");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NotFoundException("order is not good");
+        }
     }
 
 }

@@ -112,18 +112,13 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         int id = st.getInt(1);
         String name = st.getString(2);
         String description = st.getString(3);
-        int popularity = st.getInt(4);
+        float popularity = st.getFloat(4);
         int price = st.getInt(5);
         String image = st.getString(6);
         String restaurantId = st.getString(7);
         boolean party = st.getBoolean(8);
-        System.out.println("we red boolean value of party in foodmapper get dao as");
-        System.out.println(party);
-        if(!party)
-            return new Food(id, name, description, popularity, price, image, restaurantId, party);
-        PartyMapper partyMapper = PartyMapper.getInstance();
-        PartyFood pfood = partyMapper.find(id);
-        return pfood;
+        Food food = new Food(id, name, description, popularity, price, image, restaurantId, "", party);
+        return food;
     }
 
     @Override
@@ -131,10 +126,7 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         ArrayList<Food> foods = new ArrayList<>();
         while (rs.next()){
             Food food = this.getDAO(rs);
-            System.out.println("fuckin party bool value is >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            System.out.println(food.isParty());
             foods.add(food);
-//            foods.add(this.getDAO(rs));
         }
         return foods;
     }
@@ -182,21 +174,29 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     }
 
     public ArrayList<Food> find(String name, String restaurantId) throws SQLException {
+        System.out.println("in x");
         Connection con = ConnectionPool.getConnection();
+        System.out.println("in x");
         PreparedStatement st = con.prepareStatement(getFindStatement(name, restaurantId));
         try {
+            System.out.println("in x");
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {
+                System.out.println("in x");
                 st.close();
                 con.close();
                 return new ArrayList<Food>();
             }
+            System.out.println("in x");
             ArrayList<Food> result = getDAOList(resultSet);
+            System.out.println("in x");
             st.close();
             con.close();
+            System.out.println("in x");
             return result;
         } catch (SQLException e) {
-            System.out.println("error in FoodMapper.findBy name & resaurantId query.");
+            System.out.println("in x");
+                System.out.println("error in FoodMapper.findBy name & resaurantId query.");
             st.close();
             con.close();
             throw e;

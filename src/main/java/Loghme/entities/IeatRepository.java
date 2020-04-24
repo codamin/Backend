@@ -247,14 +247,14 @@ public class IeatRepository {
     }
 
     public void finalizeCart() {
-        if (cart.getOrderItems().isEmpty())
-            throw new ForbiddenException("No Order In Cart To Be Finzalized");
-        int finalPrice = cart.getFinalPrice();
-        if (finalPrice > user.getCredit())
-            throw new ForbiddenException("Not Enough Credit To Finalize The Cart");
-        user.decreaseCredit(finalPrice);
-        Order newOrder = new Order(cart, findRestaurantById(cart.getRestaurantId()));
-        user.getOrderRepository().addOrder(newOrder);
+        // if (cart.getOrderItems().isEmpty())
+        //     throw new ForbiddenException("No Order In Cart To Be Finzalized");
+        // int finalPrice = cart.getFinalPrice();
+        // if (finalPrice > user.getCredit())
+        //     throw new ForbiddenException("Not Enough Credit To Finalize The Cart");
+        // user.decreaseCredit(finalPrice);
+        // Order newOrder = new Order(cart, findRestaurantById(cart.getRestaurantId()));
+        // user.getOrderRepository().addOrder(newOrder);
         cart = new Cart();
     }
 }

@@ -1,5 +1,6 @@
 package Loghme.scheduler;
 
+import Loghme.database.dataMappers.order.OrderMapper;
 import Loghme.entities.Delivery;
 import Loghme.entities.Location;
 import Loghme.entities.Order;
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -52,18 +54,25 @@ public class HandleDeliveriesPeriodic extends TimerTask {
         data = request("http://138.197.181.131:8080/deliveries");
         ArrayList<Delivery> deliveries = getDeliveriesList(data);
         if(deliveries.size() > 0) {
-
             System.out.println("A delivery found at time = " + System.currentTimeMillis() / 1000);
 
-            order.setState("delivering");
+//            order.setState("delivering");
+            OrderMapper orderMapper = OrderMapper.getInstance();
+            try {
+                orderMapper.setState(order.getId(), "delivering");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             float deliveryDelay = getDeliveryDelay(order.getRestaurant().getLocation(), deliveries);
             TimerTask setStateToDone = new SetStateToDone(order);
             Timer timer = new Timer();
 
-            System.out.println("delivery delay = " + deliveryDelay + " seconds");
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.delivery delay = " + deliveryDelay + " seconds");
 
             timer.schedule(setStateToDone, (long) deliveryDelay * 1000);
+            System.out.println("fuckfuck");
             this.cancel();
+            cancel();
         }
     }
 }
