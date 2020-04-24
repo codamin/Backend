@@ -37,6 +37,8 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
                 "phone VARCHAR(11)," +
                 "email VARCHAR(30)," +
                 "credit INTEGER," +
+                "location_x INTEGER," +
+                "location_y INTEGER," +
                 "PRIMARY KEY(email));";
 
         PreparedStatement createTableStatement = con.prepareStatement(query);
@@ -72,7 +74,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO user(firstname, lastname, phone, email, credit) VALUES(?,?,?,?,?);";
+        return "INSERT INTO user(firstname, lastname, phone, email, credit, location_x, location_y) VALUES(?,?,?,?,?,?,?);";
     }
 
     protected void fillInsertValues(PreparedStatement st, User user) throws SQLException {
@@ -81,6 +83,8 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         st.setString(3, user.getPhone());
         st.setString(4, user.getEmail());
         st.setInt(5, user.getCredit());
+        st.setInt(6, 0);
+        st.setInt(7, 0);
     }
 
     @Override

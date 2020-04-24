@@ -53,11 +53,10 @@ public class DatabaseListener {
     @Scheduled(fixedDelay = 100000) // 10 min
     public static void addFoodParty() {
         List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
-//        System.out.println("after mapping..." + partyRestaurants.size());
         PartyMapper partyMapper = PartyMapper.getInstance();
-//        partyMapper.expireAll();
         for(Restaurant restaurant: partyRestaurants) {
             try {
+                partyMapper.expireAll();
                 RestaurantMapper.getInstance().insert(restaurant);
             } catch (SQLException e) {
                 System.out.println("on insert party rest");
