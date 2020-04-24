@@ -3,7 +3,7 @@ package Loghme.database.dataMappers.restaurant;
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
 import Loghme.database.dataMappers.food.FoodMapper;
-import Loghme.database.dataMappers.partyFood.PartyFoodMapper;
+//import Loghme.database.dataMappers.partyFood.PartyFoodMapper;
 import Loghme.entities.Food;
 import Loghme.entities.Location;
 import Loghme.entities.PartyFood;

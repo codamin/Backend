@@ -117,14 +117,24 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         String image = st.getString(6);
         String restaurantId = st.getString(7);
         boolean party = st.getBoolean(8);
-        return new Food(id, name, description, popularity, price, image, restaurantId, party);
+        System.out.println("we red boolean value of party in foodmapper get dao as");
+        System.out.println(party);
+        if(!party)
+            return new Food(id, name, description, popularity, price, image, restaurantId, party);
+        PartyMapper partyMapper = PartyMapper.getInstance();
+        PartyFood pfood = partyMapper.find(id);
+        return pfood;
     }
 
     @Override
     protected ArrayList<Food> getDAOList(ResultSet rs) throws SQLException {
         ArrayList<Food> foods = new ArrayList<>();
         while (rs.next()){
-            foods.add(this.getDAO(rs));
+            Food food = this.getDAO(rs);
+            System.out.println("fuckin party bool value is >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            System.out.println(food.isParty());
+            foods.add(food);
+//            foods.add(this.getDAO(rs));
         }
         return foods;
     }

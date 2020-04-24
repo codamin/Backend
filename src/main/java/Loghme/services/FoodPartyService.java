@@ -2,7 +2,7 @@ package Loghme.services;
 
 //import Loghme.DTOs.FoodPartyTimerDTO;
 import Loghme.DTOs.FoodPartyTimerDTO;
-import Loghme.database.dataMappers.partyFood.PartyFoodMapper;
+//import Loghme.database.dataMappers.partyFood.PartyFoodMapper;
 import Loghme.entities.FoodPartyTimer;
 import Loghme.entities.PartyFood;
 import Loghme.scheduler.HandleFoodPartyRemainingTime;
@@ -20,10 +20,10 @@ import java.util.TimerTask;
 public class FoodPartyService {
     private static FoodPartyTimer foodPartyTimer = FoodPartyTimer.getInstance();
 
-    public static ArrayList<PartyFood> getFoodPartyFoods() throws SQLException {
-        ArrayList<PartyFood> result = PartyFoodMapper.getInstance().findAll();
-        return result;
-    }
+//    public static ArrayList<PartyFood> getFoodPartyFoods() throws SQLException {
+//        ArrayList<PartyFood> result = PartyFoodMapper.getInstance().findAll();
+//        return result;
+//    }
 
     public static FoodPartyTimerDTO getRemainingTime() {
         return new FoodPartyTimerDTO(foodPartyTimer);

@@ -5,6 +5,16 @@ public class PartyFood extends Food {
     private int count;
     private int oldPrice;
 
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
+    private boolean expired;
+
     public PartyFood() {}
 
     public PartyFood(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean party) {
@@ -12,10 +22,11 @@ public class PartyFood extends Food {
     }
 
     public PartyFood(int id, String name, String description, float popularity, int price, String image,
-                     String restaurantId, boolean party, int count, int oldPrice) {
+                     String restaurantId, boolean party, int count, int oldPrice, boolean expired) {
         super(id, name, description, popularity, price, image, restaurantId, party);
         this.count = count;
         this.oldPrice = oldPrice;
+        this.expired = expired;
     }
 
     public int getOldPrice() {

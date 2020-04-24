@@ -1,11 +1,22 @@
 package Loghme.entities;
 
 public class Food {
+    private int id;
+    private String name;
+    private String description;
+    private float popularity;
+    private int price;
+    private String image;
+    private String restaurantName;
+    private String restaurantId;
+    private boolean available;
+    private boolean party;
+
 
     public Food() {
     }
 
-    public Food(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean party) {
+    public Food(int id, String name, String description, float popularity, int price, String image, String restaurantId, boolean _party) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -14,7 +25,7 @@ public class Food {
         this.image = image;
         this.restaurantId = restaurantId;
         this.available = true;
-        this.party = party;
+        this.party = _party;
     }
 
     public int getId() {
@@ -24,17 +35,6 @@ public class Food {
     public void setId(int id) {
         this.id = id;
     }
-
-    private int id;
-    private String name;
-    private String description;
-    private float popularity;
-    private int price;
-    private String image;
-    private String restaurantName;
-    private String restaurantId;
-    private boolean available = true;
-    private boolean party = false;
 
     public void decrement() {
         System.out.println("failed dec called ;((");

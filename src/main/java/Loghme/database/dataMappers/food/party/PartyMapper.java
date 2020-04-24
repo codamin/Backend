@@ -76,7 +76,7 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         boolean expired = rs.getBoolean(4);
         FoodMapper foodMapper = FoodMapper.getInstance();
         Food food = foodMapper.find(id);
-        PartyFood resp = new PartyFood(id, food.getName(), food.getDescription(), food.getPopularity(), food.getPrice(), food.getImage(), food.getRestaurantId(), true, count, oldPrice);
+        PartyFood resp = new PartyFood(id, food.getName(), food.getDescription(), food.getPopularity(), food.getPrice(), food.getImage(), food.getRestaurantId(), true, count, oldPrice, expired);
         return resp;
     }
 
@@ -152,4 +152,28 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
             throw e;
         }
     }
+
+    private String getDecreaseStatement(int id, int num) {
+        String query = "UPDATE IGNORE party SET count = count - " + String.valueOf(num) + " WHERE id = " + String.valueOf(id) + " ;";
+        System.out.println(query);
+        return query;
+    }
+    public boolean decrease(int id, int num) throws SQLException {
+        boolean result;
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getDecreaseStatement(id, num));
+        try {
+            result = st.execute();
+            st.close();
+            con.close();
+            return result;
+        } catch (SQLException e) {
+            st.close();
+            con.close();
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+
 }

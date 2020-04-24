@@ -3,6 +3,7 @@ package Loghme.database.dataMappers.order.item;
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
 import Loghme.database.dataMappers.food.FoodMapper;
+import Loghme.database.dataMappers.food.party.PartyMapper;
 import Loghme.database.dataMappers.order.IOrderMapper;
 import Loghme.database.dataMappers.order.OrderMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
@@ -115,7 +116,10 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         int num = rs.getInt(3);
 
         FoodMapper foodMapper = FoodMapper.getInstance();
+        PartyMapper partyMapper = PartyMapper.getInstance();
         Food food = foodMapper.find(foodId);
+        if(food.isParty())
+            food = partyMapper.find(foodId);
         OrderItem item = new OrderItem(orderId, foodId, num, food);
         return item;
     }

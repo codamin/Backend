@@ -3,6 +3,7 @@ package Loghme.database.dataMappers.order;
 import Loghme.database.ConnectionPool;
 import Loghme.database.dataMappers.Mapper;
 import Loghme.database.dataMappers.food.FoodMapper;
+import Loghme.database.dataMappers.food.party.PartyMapper;
 import Loghme.database.dataMappers.order.item.OrderItemMapper;
 import Loghme.database.dataMappers.restaurant.IRestaurantMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
@@ -10,6 +11,7 @@ import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.*;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.exceptions.NotFoundException;
+import org.springframework.http.codec.multipart.Part;
 //import com.sun.tools.javac.tree.JCTree;
 
 import javax.security.auth.login.AccountExpiredException;
@@ -231,27 +233,53 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         return query;
     }
 
-    private void handleFinalize(String userId) throws SQLException {
+    private void handleFinalize(String userId, Order order) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getSerStateStatement(userId, "finalized"));
         try {
             st.executeUpdate();
             st.close();
             con.close();
-            return;
         } catch (SQLException e) {
             st.close();
             con.close();
             e.printStackTrace();
             throw e;
         }
+        PartyMapper partyMapper = PartyMapper.getInstance();
+        for(OrderItem item: order.getOrderItems()) {
+            if(item.getFood().isParty()) {
+                try {
+                    Food food = item.getFood();
+                    partyMapper.decrease(food.getId(), item.getNumber());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+        }
     }
 
     public void finalizeCart(String userId) {
+        PartyMapper partyMapper = PartyMapper.getInstance();
         try {
             Order order = getCart(userId);
             if(order.getId() == null) {
                 throw new ForbiddenException("there is no order to finalize");
+            }
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>order mapper finalize cart before first for");
+            for(OrderItem item: order.getOrderItems()) {
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>on first for");
+                if(item.getFood().isParty()) {
+                    System.out.println(item.getFood().isParty());
+                    System.out.println("in if");
+                    Food food = item.getFood();
+                    PartyFood pfood = partyMapper.find(food.getId());
+                    if(pfood.isExpired())
+                        throw new ForbiddenException("The " + food.getName() + " has been expired.");
+                    if(pfood.getCount() < item.getNumber())
+                        throw new ForbiddenException(("The " + food.getName() + " is just " + String.valueOf(pfood.getCount()) + " available."));
+                }
             }
             int price = order.getFinalPrice();
             UserMapper userMapper = UserMapper.getInstance();
@@ -259,7 +287,7 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             if(credit < price)
                 throw new ForbiddenException("You do not have enough credit to purchase.");
             userMapper.addCredit(userId, -price);
-            handleFinalize(userId);
+            handleFinalize(userId, order);
         } catch (SQLException e) {
             e.printStackTrace();
         }
