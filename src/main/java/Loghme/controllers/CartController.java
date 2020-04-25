@@ -1,6 +1,7 @@
 package Loghme.controllers;
 
 //import Loghme.entities.IeatRepository;
+import Loghme.DTOs.OrderDTO;
 import Loghme.entities.Order;
 //import Loghme.entities.OrderItem;
 //import Loghme.requests.AddToCart;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
 public class CartController {
 
     @GetMapping
-    public Order getCart() {
+    public OrderDTO getCart() {
         return CartService.getCart("ekhamespanah@yahoo.com");
     }
 

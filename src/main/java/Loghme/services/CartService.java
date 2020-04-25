@@ -1,5 +1,6 @@
 package Loghme.services;
 
+import Loghme.DTOs.OrderDTO;
 import Loghme.database.dataMappers.order.OrderMapper;
 import Loghme.entities.Cart;
 import Loghme.entities.Order;
@@ -13,7 +14,7 @@ import java.util.TimerTask;
 
 public class CartService {
     
-    public static Order getCart(String email) {
+    public static OrderDTO getCart(String email) {
         OrderMapper orderMapper = OrderMapper.getInstance();
         Order resp = new Order();
         try {
@@ -21,7 +22,8 @@ public class CartService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return resp;
+        OrderDTO respDTO = new OrderDTO(resp);
+        return respDTO;
     }
 
     public static void addToCart(String userId, String restaurantId, String foodName, int number) throws SQLException {

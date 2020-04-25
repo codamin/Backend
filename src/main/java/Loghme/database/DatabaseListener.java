@@ -50,7 +50,7 @@ public class DatabaseListener {
         }
     }
 
-    @Scheduled(fixedDelay = 100000) // 10 min
+    @Scheduled(fixedDelay = 5 * 60 * 1000) // 10 min
     public static void addFoodParty() {
         List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
         PartyMapper partyMapper = PartyMapper.getInstance();
