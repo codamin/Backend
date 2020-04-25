@@ -209,8 +209,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
 
     private String getSetStateStatement(int orderId, String state) {
         String query = "UPDATE IGNORE orders SET state = " + String.format("'%s'", state) + " WHERE id = " + String.valueOf(orderId) + " ;";
-//        String query = "UPDATE IGNORE orders SET state = " + String.format("'%s'", state) + " WHERE userId = " + String.format("'%s'", userId) + " AND state = " + String.format("'%s'", "nf") + ";";
-        System.out.println(query);
         return query;
 
     }
@@ -275,7 +273,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
 
     private String getFindAllStatement(String userId) {
         String query = "SELECT * FROM orders WHERE userId = " + String.format("'%s'", userId) + " AND state <> 'nf';";
-        System.out.println(query);
         return query;
     }
 

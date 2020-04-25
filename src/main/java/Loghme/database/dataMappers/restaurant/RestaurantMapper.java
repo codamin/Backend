@@ -130,7 +130,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                 "power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900\n" +
                 "LIMIT " + Integer.toString(items) + " " +
                 "OFFSET " + Integer.toString(items*(page-1));
-        System.out.println(query);
         return  query;
     }
 

@@ -114,7 +114,7 @@ public class Restaurant {
             for (Food food : menu)
                 if (food.getName().equals(name))
                     return food;
-        System.out.println("before if in partyMenu" + partyMenu);
+
         if(partyMenu == null)
             return null;
 

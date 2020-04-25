@@ -42,7 +42,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
                 "PRIMARY KEY(email));";
 
         PreparedStatement createTableStatement = con.prepareStatement(query);
-        // System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
@@ -62,7 +61,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         } catch (Exception e) {
             st.close();
             con.close();
-            e.printStackTrace();
+            throw e;
             return false;
         }
     }
