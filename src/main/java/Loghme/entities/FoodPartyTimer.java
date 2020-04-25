@@ -32,6 +32,5 @@ public class FoodPartyTimer {
         remainingTime--;
         if(remainingTime == 0)
             remainingTime = updatePeriod;
-        System.out.println(remainingTime);
     }
 }
