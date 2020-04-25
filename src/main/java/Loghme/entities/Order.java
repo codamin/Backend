@@ -60,17 +60,6 @@ public class Order {
         this.state = state;
     }
 
-    public Order(Cart cart, Restaurant cartRestaurant) {
-        id = IeatRepository.getInstance().getOrderId();
-        IeatRepository.getInstance().setOrderId(IeatRepository.getInstance().getOrderId() + 1);
-        this.orderItems = cart.getOrderItems();
-        this.restaurant = cartRestaurant;
-        this.restaurantName = cart.getRestaurantName();
-        state = "finding delivery";
-        remMin = -1;
-        remSec = -1;
-    }
-
     public String getUserId() {
         return userId;
     }

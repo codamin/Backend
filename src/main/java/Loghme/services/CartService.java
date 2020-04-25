@@ -2,9 +2,7 @@ package Loghme.services;
 
 import Loghme.DTOs.OrderDTO;
 import Loghme.database.dataMappers.order.OrderMapper;
-import Loghme.entities.Cart;
 import Loghme.entities.Order;
-import Loghme.requests.DeleteFromCart;
 import Loghme.scheduler.HandleDeliveriesPeriodic;
 
 import java.beans.PropertyEditorSupport;
