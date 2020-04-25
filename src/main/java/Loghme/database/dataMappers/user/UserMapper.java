@@ -61,7 +61,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         } catch (Exception e) {
             st.close();
             con.close();
-            throw e;
+            e.printStackTrace();
             return false;
         }
     }

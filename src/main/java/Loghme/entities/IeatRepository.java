@@ -141,7 +141,7 @@ public class IeatRepository {
         try {
             map = mapper.readValue(jsonData, typeRef);
         } catch (IOException e) {
-            throw e;
+            e.printStackTrace();
         }
         return map;
     }
