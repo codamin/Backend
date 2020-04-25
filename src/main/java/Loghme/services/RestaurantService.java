@@ -13,7 +13,19 @@ public class RestaurantService {
     public static ArrayList<Restaurant> getRestaurantsList(int page, int items, String restaurantSearch, String foodSearch) throws SQLException {
         ArrayList<Restaurant> result = new ArrayList<Restaurant>();
         RestaurantMapper mapper = RestaurantMapper.getInstance();
-        result = restaurantSearch == null && foodSearch == null ? mapper.findAll(page, items) : mapper.search(page, items, restaurantSearch, foodSearch);
+        System.out.println("res search====================================" + restaurantSearch);
+        System.out.println("food search====================================" + foodSearch);
+
+        if(restaurantSearch == null && foodSearch == null) {
+            System.out.println("find all called both was null");
+            result = mapper.findAll(page, items);
+        }
+        else {
+            System.out.println("#################################### search called");
+            String searchFood = foodSearch==null ? "" : foodSearch;
+            String searchRestaurant = restaurantSearch==null? "" : restaurantSearch;
+            result = mapper.search(page, items, searchRestaurant, searchFood);
+        }
         return result;
     }
 

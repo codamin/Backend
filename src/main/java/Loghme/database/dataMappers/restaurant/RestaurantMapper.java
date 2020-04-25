@@ -114,9 +114,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
 //    @Override
     public String getSearchStatement(int page, int items, String restaurantSearch, String foodSearch, String userId) {
         String x = "SELECT * " +
-                "FROM restaurant r, user " +
+                "FROM restaurant r, user u\n" +
                 "WHERE r.name LIKE " + "'%" + (restaurantSearch == null ? "" : restaurantSearch.toLowerCase()) + "%' AND power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900 \n" +
-                "AND u.id = " + String.format("'%s'", userId) + "\n" +
+                "AND u.email = " + String.format("'%s'", userId) + "\n" +
                 "AND EXISTS(SELECT * " +
                 "FROM food f " +
                 "WHERE f.restaurantID = r.id AND f.name LIKE " + "'%" + (foodSearch == null ? "" :
@@ -130,7 +130,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     public String getFindAllStatement(int page, int items, String userId) throws SQLException {
         String query = "SELECT * FROM restaurant r, user u\n" +
                 "WHERE u.email = " + String.format("'%s'", userId) + " AND\n" +
-                "power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900;\n";
+                "power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900\n" +
+                "LIMIT " + Integer.toString(items) + " " +
+                "OFFSET " + Integer.toString(items*(page-1));
         System.out.println(query);
         return  query;
     }
