@@ -17,8 +17,6 @@ public class RestaurantController {
             @RequestParam(value = "foodSearch", required = false) String foodSearch,
             @RequestParam(value = "page") int page,
             @RequestParam(value = "items") int items) throws SQLException {
-        System.out.println("food search = " + foodSearch);
-        System.out.println("rest search = " + restaurantSearch);
         return RestaurantService.getRestaurantsList(page, items, restaurantSearch, foodSearch);
     }
 

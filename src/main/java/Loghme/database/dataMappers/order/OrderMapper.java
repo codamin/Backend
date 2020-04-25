@@ -29,7 +29,7 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         try {
             instance = new OrderMapper();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error occured in gettring instance of OrderMapper");
         }
     }
 
@@ -52,14 +52,12 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
                 ");";
 
         PreparedStatement createTableStatement = con.prepareStatement(query);
-        System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
     }
 
     protected void fillInsertValues(PreparedStatement st, Order order) throws SQLException {
-//        st.setString(1, order.);
         st.setString(1, order.getRestaurant().getId());
         st.setString(2, order.getRestaurant().getId());
         st.setString(3, order.getState());
@@ -85,13 +83,11 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
     @Override
     protected String getDeleteStatement(Integer id) {
         String query = "DELETE FROM orders WHERE id = " + String.valueOf(id) + ";";
-        System.out.println(query);
         return query;
     }
 
     @Override
     protected Order getDAO(ResultSet rs) throws SQLException {
-        System.out.println("get dao ordermapper start");
         int id = rs.getInt(1);
         String userId = rs.getString(2);
         String restaurantId = rs.getString(3);
@@ -107,7 +103,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         Restaurant restaurant = restaurantMapper.find(restaurantId);
         order.setRestaurant(restaurant);
         order.setRestaurantName(restaurant.getName());
-        System.out.println("get dao ordermapper end");
         return order;
     }
 
@@ -138,23 +133,19 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
     }
 
     public boolean insertCart(String userId, String restaurantId) throws SQLException {
-        System.out.println("add new cart");
         int result;
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertCartStatement());
         fillInsertCartValues(st, userId, restaurantId);
         try {
             result = st.executeUpdate();
-            System.out.println("here result");
-            System.out.println(result);
             st.close();
             con.close();
             return result > 0;
         } catch (Exception e) {
             st.close();
             con.close();
-            e.printStackTrace();
-            return false;
+            throw e;
         }
     }
 
@@ -162,7 +153,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         String query = "SELECT * FROM orders\n" +
                 " WHERE userId = " + String.format("'%s'", userId) + "\n" +
                 " AND state = 'nf';";
-        System.out.println(query);
         return query;
     }
 
@@ -174,38 +164,30 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             if(rs.isClosed()) {
                 st.close();
                 con.close();
-                System.out.println("rs is closed on search for not finalized order");
                 return new Order();
             }
             ArrayList<Order> orders = getDAOList(rs);
             st.close();
             con.close();
             if(orders.size() == 0) {
-                System.out.println("Order Mapper found orders size 0");
                 return new Order();
             }
             else {
-                System.out.println("Order Mapper found orders size more than 0");
                 return orders.get(0);
             }
         } catch (SQLException e) {
-            System.out.println("error in find the not finalized order");
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
 
-    public void addToCart(String userId, String restaurantId, String foodName, int number) {
+    public void addToCart(String userId, String restaurantId, String foodName, int number) throws SQLException {
         Order order = null;
         try {
             order = getCart(userId);
             if(order.getId() == null) {
-                System.out.println("cart found as null");
                 boolean resp = insertCart(userId, restaurantId);
-                System.out.println("our resp is ");
-                System.out.println(resp);
                 if(!resp)
                     return;
             }
@@ -218,14 +200,10 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
                 throw new NotFoundException("such food could not be found.");
             int foodId = foods.get(0).getId();
             OrderItemMapper itemMapper = OrderItemMapper.getInstance();
-            System.out.println("to insert ");
-            System.out.println(order.getId());
-            System.out.println(foodId);
-            System.out.println(number);
             itemMapper.insert(order.getId(), foodId, number);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -246,7 +224,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
@@ -260,7 +237,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
                     Food food = item.getFood();
                     partyMapper.decrease(food.getId(), item.getNumber());
                 } catch (SQLException e) {
-                    e.printStackTrace();
                     throw e;
                 }
             }
@@ -274,21 +250,14 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             if(order.getId() == null) {
                 throw new ForbiddenException("there is no order to finalize");
             }
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>order mapper finalize cart before first for");
             for(OrderItem item: order.getOrderItems()) {
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>on first for");
                 if(item.getFood().isParty()) {
-                    System.out.println("was party");
-                    System.out.println(item.getFood().isParty());
-                    System.out.println("in if");
                     Food food = item.getFood();
                     PartyFood pfood = partyMapper.find(food.getId());
                     if(pfood.isExpired())
-                        throw new ForbiddenException("The " + food.getName() + " has been expired.");
-                    System.out.println("two");
+                        throw new ForbiddenException("The food" + " has been expired.");
                     if(pfood.getCount() < item.getNumber())
                         throw new ForbiddenException("The food is just " + String.valueOf(pfood.getCount()) + " available.");
-                    System.out.println("three");
                 }
             }
             int price = order.getFinalPrice();
@@ -300,7 +269,6 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             handleFinalize(userId, order);
             return order;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw e;
         }
     }
@@ -324,13 +292,10 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
             ArrayList<Order> result = getDAOList(rs);
             st.close();
             con.close();
-            System.out.println("len orders returned in findall is ");
-            System.out.println(result.size());
             return result;
         } catch(SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }

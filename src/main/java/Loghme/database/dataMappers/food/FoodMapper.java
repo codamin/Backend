@@ -20,7 +20,7 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         try {
             instance = new FoodMapper();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error occured in getting instance of FoodMapper");
         }
     }
     public static FoodMapper getInstance() {
@@ -41,7 +41,6 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
                 "FOREIGN KEY(restaurantId) REFERENCES restaurant(id)" +
                 ");";
         PreparedStatement createTableStatement = con.prepareStatement(query);
-        System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
@@ -60,8 +59,7 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
             System.out.println("error in Mapper.insert query.");
             st.close();
             con.close();
-            e.printStackTrace();
-            return false;
+            throw e;
         }
         System.out.println("if food is party");
         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
@@ -224,7 +222,6 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
             System.out.println("error in FoodMapper.findBy id query.");
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }

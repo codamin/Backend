@@ -23,7 +23,7 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         try {
             instance = new RestaurantMapper();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error occured in getting instance of RestaurantMapper");
         }
     }
 
@@ -72,7 +72,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         } catch (Exception e) {
             st.close();
             con.close();
-//            e.printStackTrace();
             throw e;
         }
     }

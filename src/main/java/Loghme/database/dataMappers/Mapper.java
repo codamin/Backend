@@ -48,7 +48,6 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
                 resultSet.next();
                 return getDAO(resultSet);
             } catch (SQLException ex) {
-                ex.printStackTrace();
                 throw ex;
             }
         }
@@ -68,8 +67,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
             System.out.println("error in Mapper.insert query.");
             st.close();
             con.close();
-            e.printStackTrace();
-            return false;
+            throw e;
         }
     }
 

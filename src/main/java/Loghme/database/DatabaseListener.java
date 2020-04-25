@@ -32,7 +32,7 @@ public class DatabaseListener {
             UserMapper.getInstance().insert(khames);
             UserMapper.getInstance().find(khames.getEmail());
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
 
         OrderMapper.getInstance();
@@ -45,7 +45,7 @@ public class DatabaseListener {
             try {
                 RestaurantMapper.getInstance().insert(restaurant);
             } catch (SQLException e) {
-                System.out.println("on insert restaurant");
+                System.out.println("error occured on insert restaurant");
             }
         }
     }
@@ -54,12 +54,16 @@ public class DatabaseListener {
     public static void addFoodParty() {
         List<Restaurant> partyRestaurants = FetchData.fetchFoodParty();
         PartyMapper partyMapper = PartyMapper.getInstance();
+        try {
+            partyMapper.expireAll();
+        } catch (SQLException e) {
+            System.out.println("error occured in expire all previous food parties");
+        }
         for(Restaurant restaurant: partyRestaurants) {
             try {
-                partyMapper.expireAll();
                 RestaurantMapper.getInstance().insert(restaurant);
             } catch (SQLException e) {
-                System.out.println("on insert party rest");
+                System.out.println("error occured on insert party rest");
             }
         }
     }

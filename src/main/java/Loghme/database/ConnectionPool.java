@@ -13,7 +13,7 @@ public class ConnectionPool {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("error occured in getting class for name jdbc.Driver");
         }
 
         connectionPool.setJdbcUrl("jdbc:mysql://localhost:3306/Loghme?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
@@ -24,7 +24,7 @@ public class ConnectionPool {
         connectionPool.setMinPoolSize(5);
         connectionPool.setAcquireIncrement(5);
         connectionPool.setMaxPoolSize(20);
-        connectionPool.setMaxStatements(100000);
+        connectionPool.setMaxStatements(100);
 
     }
 

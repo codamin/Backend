@@ -54,9 +54,7 @@ public class HandleDeliveriesPeriodic extends TimerTask {
         data = request("http://138.197.181.131:8080/deliveries");
         ArrayList<Delivery> deliveries = getDeliveriesList(data);
         if(deliveries.size() > 0) {
-            System.out.println("A delivery found at time = " + System.currentTimeMillis() / 1000);
 
-//            order.setState("delivering");
             OrderMapper orderMapper = OrderMapper.getInstance();
             try {
                 orderMapper.setState(order.getId(), "delivering");
@@ -67,10 +65,7 @@ public class HandleDeliveriesPeriodic extends TimerTask {
             TimerTask setStateToDone = new SetStateToDone(order);
             Timer timer = new Timer();
 
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.delivery delay = " + deliveryDelay + " seconds");
-
             timer.schedule(setStateToDone, (long) deliveryDelay * 1000);
-            System.out.println("fuckfuck");
             this.cancel();
             cancel();
         }

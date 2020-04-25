@@ -21,7 +21,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         try {
             instance = new UserMapper();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error occured in getting instance of UserMapper");
         }
     }
 
@@ -90,7 +90,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     @Override
     protected String getFindStatement(String id) {
         String query = "SELECT * FROM user WHERE email = \"" + id + "\";";
-        // System.out.println(query);
         return query;
     }
 
@@ -118,9 +117,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         int credit = rs.getInt(5);
         User user = new User(fname, lname, phone, id, credit);
         OrderMapper orderMapper = OrderMapper.getInstance();
-        System.out.println("before for in orderMapper  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         for(Order order: orderMapper.findAll(id)) {
-            System.out.println("for step <<<<<<<<<<<<<<<<");
             user.getOrderRepository().addOrder(order);
         }
         return user;
@@ -133,7 +130,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     protected String getAddCreditStatment(String id, Integer amount) {
         String query = "UPDATE IGNORE user SET credit = credit + " + String.valueOf(amount) + " WHERE email = " + String.format("'%s'", id) + ";";
-        // System.out.println(query);
         return query;
     }
 
@@ -147,7 +143,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         } catch (Exception e) {
             st.close();
             con.close();
-            e.printStackTrace();
+            throw e;
         }
     }
 

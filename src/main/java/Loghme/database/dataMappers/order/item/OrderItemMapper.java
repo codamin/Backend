@@ -11,7 +11,6 @@ import Loghme.entities.Food;
 import Loghme.entities.Order;
 import Loghme.entities.OrderItem;
 import Loghme.entities.PartyFood;
-//import com.sun.org.apache.xalan.internal.xsltc.trax.XSLTCSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +26,7 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         try {
             instance = new OrderItemMapper();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error occured in getting instance of OrderItemMapper");
         }
     }
 
@@ -45,7 +44,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
                 "FOREIGN KEY(foodId) REFERENCES food(id)" +
                 ");";
         PreparedStatement createTableStatement = con.prepareStatement(query);
-        System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
@@ -70,7 +68,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
             con.close();
             ArrayList<OrderItem> items = findAll(orderId);
             if(items.size() > 0) {
-
                 return true;
             }
             OrderMapper orderMapper = OrderMapper.getInstance();
@@ -79,7 +76,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
@@ -156,7 +152,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
     private String getFindStatement(int orderId, int foodId) {
         String query = "SELECT * FROM orderItem WHERE\n" +
                 "orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
-        System.out.println(query);
         return query;
     }
 
@@ -180,14 +175,12 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
 
     private String getInsertStatement(int orderId, int foodId, int number) {
         String query = "INSERT INTO orderItem(orderId, foodId, num)VALUES(" + String.valueOf(orderId) + "," + String.valueOf(foodId) + "," + String.valueOf(number) + ");";
-        System.out.println(query);
         return query;
     }
 
@@ -196,13 +189,11 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
                 + String.valueOf(number) + " WHERE orderId = "
                 + String.valueOf(orderId) + " AND foodId = "
                 + String.valueOf(foodId) + ";";
-        System.out.println(query);
         return query;
     }
 
     private String getGetNubmerStatement(int orderId, int foodId) {
         String query = "SELECT num FROM orderItem WHERE orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
-        System.out.println(query);
         return query;
     }
 
@@ -226,15 +217,12 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
 
     private boolean handleDeleteFromCart(int orderId, int foodId) throws SQLException {
-        System.out.println("handling decrease from cart");
         int num = getNumber(orderId, foodId);
-        System.out.println(num);
         if(num > 0)
             return true;
         boolean result = delete(orderId, foodId);
@@ -256,7 +244,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         } catch(SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
@@ -268,7 +255,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
             result = changeNumber(orderId, foodId, number);
             return result;
         }
-        System.out.println("run not null");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getInsertStatement(orderId, foodId, number));
         try {
@@ -279,14 +265,12 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
 
     private String getFindAllStatement(int orderId) {
         String query = "SELECT * FROM orderItem WHERE orderId = " + String.valueOf(orderId) + ";";
-        System.out.println("query");
         return query;
     }
 
@@ -307,7 +291,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }

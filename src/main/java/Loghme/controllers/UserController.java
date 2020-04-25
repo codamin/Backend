@@ -2,8 +2,10 @@ package Loghme.controllers;
 
 import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.User;
+import Loghme.exceptions.ForbiddenException;
 import Loghme.requests.AddCredit;
 import org.springframework.web.bind.annotation.*;
+//import sun.awt.FontDescriptor;
 
 import java.sql.SQLException;
 
@@ -16,8 +18,8 @@ public class UserController {
         try {
             return UserMapper.getInstance().find("ekhamespanah@yahoo.com");
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            System.out.println("error occured in getting user information");
+            throw new ForbiddenException("error occured in getting user information");
         }
     }
 
@@ -26,7 +28,8 @@ public class UserController {
         try {
             UserMapper.getInstance().addCredit("ekhamespanah@yahoo.com", req.getCredit());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error occured in adding credit request");
+            throw new ForbiddenException("error occured in adding credit request");
         }
     }
 

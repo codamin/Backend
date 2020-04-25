@@ -21,7 +21,7 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         try {
             instance = new PartyMapper();
         } catch(SQLException e) {
-            e.printStackTrace();
+            System.out.println("error occured in getting instance of PartyMapper");
         }
     }
     public static PartyMapper getInstance() {
@@ -56,7 +56,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
     @Override
     protected String getFindStatement(Integer id) {
         String query = "SELECT * FROM party WHERE id = " + String.valueOf(id) + ";";
-//        System.out.println(query);
         return query;
     }
 
@@ -110,7 +109,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
@@ -133,7 +131,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
@@ -176,54 +173,33 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         } catch (SQLException e) {
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }
 
-    private String getFuck(int id) {
-        String query = "SELECT * FROM party WHERE id = " + String.valueOf(id) + ";";
-        System.out.println(query);
-        return query;
-    }
     public PartyFood find(int id) throws SQLException {
-        System.out.println("here");
-//        Connection con = ConnectionPool.getConnection();
         Connection con = ConnectionPool.getConnection();
-        System.out.println("here");
         PreparedStatement st = con.prepareStatement(getFindStatement(id));
-        System.out.println("here");
         ResultSet rs;
-        System.out.println("here");
         try {
-            System.out.println("here");
             rs = st.executeQuery();
-            System.out.println("here");
             if(rs.isClosed()) {
-                System.out.println("here");
                 st.close();
-                System.out.println("here");
                 con.close();
                 return null;
             }
-            System.out.println("here2");
             ArrayList<PartyFood> foods = getDAOList(rs);
-            System.out.println("here");
             if(foods.size() <= 0) {
-                System.out.println("here");
                 st.close();
                 con.close();
                 return null;
             }
-            System.out.println("here");
             st.close();
             con.close();
             return foods.get(0);
         } catch (SQLException e) {
-            System.out.println("here");
             st.close();
             con.close();
-            e.printStackTrace();
             throw e;
         }
     }

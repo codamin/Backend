@@ -4,6 +4,7 @@ package Loghme.controllers;
 import Loghme.entities.Order;
 //import Loghme.entities.OrderItem;
 //import Loghme.requests.AddToCart;
+import Loghme.exceptions.ForbiddenException;
 import Loghme.exceptions.NotFoundException;
 import Loghme.requests.DeleteFromCart;
 //import Loghme.services.CartService;
@@ -22,29 +23,33 @@ public class CartController {
         return CartService.getCart("ekhamespanah@yahoo.com");
     }
 
-//    @GetMapping("/{restaurantId}/{foodName}")
-//    public OrderItem getOrderItem(@PathVariable("restaurantId") String restaurantId, @PathVariable("foodName") String foodName) {
-//        return CartService.getOrderItem(restaurantId, foodName);
-//    }
-//
     @PostMapping()
     public void addToCart(@RequestBody AddToCart req) {
-        CartService.addToCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName(), req.getNum());
+        try {
+            CartService.addToCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName(), req.getNum());
+        } catch (SQLException e) {
+            System.out.println("error occured in addToCart post request handling");
+            throw new ForbiddenException("error occured in addToCart post request handling");
+        }
     }
 
     @DeleteMapping()
     public void deleteFromCart(@RequestBody DeleteFromCart req) {
-        CartService.deleteFromCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName());
+        try {
+            CartService.deleteFromCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName());
+        } catch (SQLException e) {
+            System.out.println("error occured in deleteFrom cart delete request handling");
+            throw new ForbiddenException("error occured in deleteFrom cart delete request handling");
+        }
     }
 
     @PostMapping("/finalize")
     public void finalizeCart() {
         try {
-            System.out.println("fuck in cart controller>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>o");
             CartService.finalizeCart("ekhamespanah@yahoo.com");
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new NotFoundException("order is not good");
+            System.out.println("error occured in finalize cart");
+            throw new ForbiddenException("order is not good");
         }
     }
 
