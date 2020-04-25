@@ -53,9 +53,7 @@ public class FetchData {
     public static List<Restaurant> fetchFoodParty() {
         String data = request("http://138.197.181.131:8080/foodparty").replace("menu", "partyMenu");
         try {
-            System.out.println("################################################# mapping");
             List<Restaurant> newRestaurants = new ObjectMapper().readValue(data, new TypeReference<List<Restaurant>>() {});
-            System.out.println("#################################################" + newRestaurants.size());
             return newRestaurants;
         } catch (IOException e) {
             e.printStackTrace();

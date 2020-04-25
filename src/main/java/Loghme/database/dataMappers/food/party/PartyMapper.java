@@ -36,7 +36,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
                 "expired BOOLEAN NOT NULL,\n" +
                 "PRIMARY KEY(id),\n" +
                 "FOREIGN KEY(id) REFERENCES food(id));";
-        System.out.println(query);
         PreparedStatement st = con.prepareStatement(query);
         st.executeUpdate();
         st.close();
@@ -62,7 +61,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
     @Override
     protected String getFindAllStatement() throws SQLException {
         String query = "SELECT * FROM party WHERE expired = False;";
-        System.out.println(query);
         return query;
     }
 
@@ -96,7 +94,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
 
     private String getExpireAllStatement() {
         String query = "UPDATE IGNORE party SET expired = True WHERE expired = False;";
-        System.out.println(query);
         return query;
     }
     public void expireAll() throws SQLException {
@@ -116,7 +113,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
     private String getInsertStatement(int foodId, int oldPrice, int count) {
         String query = "INSERT IGNORE INTO party (id, oldPrice, count, expired)\n" +
                 "VALUES(" + String.valueOf(foodId) + "," + String.valueOf(oldPrice) + "," + String.valueOf(count) + ",False);";
-        System.out.println(query);
         return query;
     }
     public boolean insert(int foodId, int oldPrice, int count) throws SQLException {
@@ -158,7 +154,6 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
 
     private String getDecreaseStatement(int id, int num) {
         String query = "UPDATE IGNORE party SET count = count - " + String.valueOf(num) + " WHERE id = " + String.valueOf(id) + " ;";
-        System.out.println(query);
         return query;
     }
     public boolean decrease(int id, int num) throws SQLException {

@@ -1,5 +1,6 @@
 package Loghme.controllers;
 
+import Loghme.DTOs.RestaurantDTO;
 import Loghme.entities.Restaurant;
 import Loghme.services.RestaurantService;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +13,13 @@ import java.util.ArrayList;
 public class RestaurantController {
 
     @GetMapping
-    public ArrayList<Restaurant> getRestaurants(
+    public ArrayList<RestaurantDTO> getRestaurants(
             @RequestParam(value = "restaurantSearch", required = false) String restaurantSearch,
             @RequestParam(value = "foodSearch", required = false) String foodSearch,
             @RequestParam(value = "page") int page,
             @RequestParam(value = "items") int items) throws SQLException {
-        return RestaurantService.getRestaurantsList(page, items, restaurantSearch, foodSearch);
+        ArrayList<RestaurantDTO> res = RestaurantService.getRestaurantsList(page, items, restaurantSearch, foodSearch);
+        return res;
     }
 
     @GetMapping("/{restaurantId}")

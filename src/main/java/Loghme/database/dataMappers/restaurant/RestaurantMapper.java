@@ -42,7 +42,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                             "description VARCHAR(200)," +
                             "PRIMARY KEY(id));";
         PreparedStatement createTableStatement = con.prepareStatement(query);
-        System.out.println(query);
         createTableStatement.executeUpdate();
         createTableStatement.close();
         con.close();
@@ -122,7 +121,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                 foodSearch.toLowerCase()) + "%') " +
                 "LIMIT " + Integer.toString(items) + " " +
                 "OFFSET " + Integer.toString(items*(page-1));
-        System.out.println(x);
         return x;
     }
 
@@ -177,7 +175,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     protected ArrayList<Restaurant> getDAOList(ResultSet rs) throws SQLException {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         while (rs.next()){
-            restaurants.add(this.getDAO(rs));
+            Restaurant restaurant = this.getDAO(rs);
+            if(restaurant.getMenu().size() > 0)
+                restaurants.add(restaurant);
         }
         return restaurants;
     }
@@ -189,7 +189,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
 
     @Override
     public ArrayList<Restaurant> findAll(int page, int items) throws SQLException {
-        System.out.println("yes it is called");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindAllStatement(page, items, "ekhamespanah@yahoo.com"));
         try {

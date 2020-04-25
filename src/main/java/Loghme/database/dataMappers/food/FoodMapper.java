@@ -61,9 +61,6 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
             con.close();
             throw e;
         }
-        System.out.println("if food is party");
-        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        System.out.println(food.isParty());
         if(!food.isParty())
             return result;
         ArrayList<Food> foods = find(food.getName(), food.getRestaurantId());
@@ -80,18 +77,14 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         String query = "SELECT * " +
                 "FROM food \n" +
                 "WHERE id = " + id.toString() + ";";
-        System.out.println(query);
         return query;
     }
 
     @Override
     protected String getFindAllStatement() throws SQLException {
-        System.out.println("SELECT * " +
-                "FROM food f " +
-                "WHERE f.restaurantId = ?");
         return "SELECT * " +
                 "FROM food f " +
-                "WHERE f.restaurantId = ?";
+                "WHERE f.restaurantId = ? AND party = false";
     }
 
     @Override
@@ -172,29 +165,21 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     }
 
     public ArrayList<Food> find(String name, String restaurantId) throws SQLException {
-        System.out.println("in x");
         Connection con = ConnectionPool.getConnection();
-        System.out.println("in x");
         PreparedStatement st = con.prepareStatement(getFindStatement(name, restaurantId));
         try {
-            System.out.println("in x");
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {
-                System.out.println("in x");
                 st.close();
                 con.close();
                 return new ArrayList<Food>();
             }
-            System.out.println("in x");
             ArrayList<Food> result = getDAOList(resultSet);
-            System.out.println("in x");
             st.close();
             con.close();
-            System.out.println("in x");
             return result;
         } catch (SQLException e) {
-            System.out.println("in x");
-                System.out.println("error in FoodMapper.findBy name & resaurantId query.");
+            System.out.println("error in FoodMapper.findBy name & resaurantId query.");
             st.close();
             con.close();
             throw e;
