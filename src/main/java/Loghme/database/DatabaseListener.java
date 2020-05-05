@@ -23,7 +23,7 @@ public class DatabaseListener {
 
         addRestaurants();
 
-        User khames = new User();
+        User khames = new User("root", "rooti", "root@root.com", "root", "09147296831", 10000);
         try {
             UserMapper.getInstance().insert(khames);
             UserMapper.getInstance().find(khames.getEmail());

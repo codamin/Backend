@@ -4,6 +4,7 @@ import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.User;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.requests.AddCredit;
+import Loghme.requests.AddUser;
 import org.springframework.web.bind.annotation.*;
 //import sun.awt.FontDescriptor;
 
@@ -23,7 +24,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/credit")
     public void addCredit(@RequestBody AddCredit req) {
         try {
             UserMapper.getInstance().addCredit("ekhamespanah@yahoo.com", req.getCredit());
@@ -33,4 +34,15 @@ public class UserController {
         }
     }
 
+    @PostMapping
+    public void addUser(@RequestBody AddUser req) {
+        try {
+            System.out.println("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+            System.out.println(req.getFirst_name() + " " + req.getLast_name() + " " +  req.getEmail() + " " + req.getPassword());
+            UserMapper.getInstance().insert(new User(req.getFirst_name(),req.getLast_name(), req.getEmail(), req.getPassword(), "01234567891", 10000));
+        } catch (SQLException e) {
+            System.out.println("error occured in getting user information");
+            throw new ForbiddenException("error occured in getting user information");
+        }
+    }
 }
