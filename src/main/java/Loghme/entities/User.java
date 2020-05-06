@@ -9,7 +9,19 @@ public class User {
     private String email;
     private String pass;
     private int credit;
+    private String password;
     private OrderRepository orderRepository;
+
+    public User(String _firstName, String _lastName, String _email, String _password, String _phone, Integer _credit) {
+        firstName = _firstName;
+        lastName = _lastName;
+        phone = _phone;
+        phone = "01234567891";
+        email = _email;
+        password = _password;
+        credit = _credit;
+        orderRepository = new OrderRepository();
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -49,14 +61,22 @@ public class User {
         orderRepository = new OrderRepository();
     }
 
-    public User(String _firstName, String _lastName, String _phone, String _email, Integer _credit) {
-        firstName = _firstName;
-        lastName = _lastName;
-        phone = _phone;
-        email = _email;
-        credit = _credit;
-        orderRepository = new OrderRepository();
+    public String getPassword() {
+        return password;
     }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+//    public User() {
+//        firstName = new String("Ehsan");
+//        lastName = new String("KhamesPanah");
+//        phone = new String("09124820194");
+//        email = new String("ekhamespanah@yahoo.com");
+//        credit = 10000000;
+//        orderRepository = new OrderRepository();
+
+//    }
+
 
     public String getFirstName() {
         return firstName;

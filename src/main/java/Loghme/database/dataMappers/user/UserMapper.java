@@ -35,9 +35,9 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         String query = "CREATE TABLE IF NOT EXISTS user (" +
                 "firstname VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "lastname VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
-                "phone VARCHAR(11)," +
                 "email VARCHAR(30)," +
-                "password VARCHAR(512)," +
+                "password VARCHAR(50)," +
+                "phone VARCHAR(11)," +
                 "credit INTEGER," +
                 "location_x INTEGER," +
                 "location_y INTEGER," +
@@ -100,24 +100,25 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         return null;
     }
 
-    protected User convertResultSetToObject(ResultSet rs) throws SQLException {
-        String firstname = rs.getString(1);
-        String lastname = rs.getString(2);
-        String phone = rs.getString(3);
-        String email = rs.getString(4);
-        Integer credit = rs.getInt(5);
-        User user = new User(firstname, lastname, phone, email, credit);
-        return user;
-    }
+//    protected User convertResultSetToObject(ResultSet rs) throws SQLException {
+//        String firstname = rs.getString(1);
+//        String lastname = rs.getString(2);
+//        String phone = rs.getString(3);
+//        String email = rs.getString(4);
+//        Integer credit = rs.getInt(5);
+//        User user = new User(firstname, lastname, phone, email, credit);
+//        return user;
+//    }
 
     @Override
     protected User getDAO(ResultSet rs) throws SQLException {
         String fname = rs.getString(1);
         String lname = rs.getString(2);
-        String phone = rs.getString(3);
-        String id = rs.getString(4);
-        int credit = rs.getInt(5);
-        User user = new User(fname, lname, phone, id, credit);
+        String id = rs.getString(3);
+        String password = rs.getString(4);
+        String phone = rs.getString(5);
+        int credit = rs.getInt(6);
+        User user = new User(fname, lname, id, password, phone, credit);
         OrderMapper orderMapper = OrderMapper.getInstance();
         for(Order order: orderMapper.findAll(id)) {
             user.getOrderRepository().addOrder(order);
@@ -148,5 +149,4 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
             throw e;
         }
     }
-
 }

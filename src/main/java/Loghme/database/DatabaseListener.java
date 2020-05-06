@@ -22,7 +22,6 @@ public class DatabaseListener {
     public static void start() throws SQLException {
 
         addRestaurants();
-
         User khames = new User();
         try {
             UserMapper.getInstance().insert(khames);

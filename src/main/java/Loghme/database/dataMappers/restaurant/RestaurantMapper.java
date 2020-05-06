@@ -121,6 +121,7 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                 foodSearch.toLowerCase()) + "%') " +
                 "LIMIT " + Integer.toString(items) + " " +
                 "OFFSET " + Integer.toString(items*(page-1));
+        System.out.println("query, "+ x);
         return x;
     }
 
