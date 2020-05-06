@@ -6,6 +6,7 @@ import Loghme.database.dataMappers.order.OrderMapper;
 import Loghme.entities.Order;
 import Loghme.entities.Restaurant;
 import Loghme.entities.User;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,6 +37,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
                 "lastname VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "phone VARCHAR(11)," +
                 "email VARCHAR(30)," +
+                "password VARCHAR(512)," +
                 "credit INTEGER," +
                 "location_x INTEGER," +
                 "location_y INTEGER," +
@@ -73,7 +75,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO user(firstname, lastname, phone, email, credit, location_x, location_y) VALUES(?,?,?,?,?,?,?);";
+        return "INSERT IGNORE INTO user(firstname, lastname, phone, email, password, credit, location_x, location_y) VALUES(?,?,?,?,?,?,?,?);";
     }
 
     protected void fillInsertValues(PreparedStatement st, User user) throws SQLException {
@@ -81,9 +83,10 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         st.setString(2, user.getLastName());
         st.setString(3, user.getPhone());
         st.setString(4, user.getEmail());
-        st.setInt(5, user.getCredit());
-        st.setInt(6, 0);
+        st.setString(5, DigestUtils.sha256Hex(user.getPass().getBytes()));
+        st.setInt(6, user.getCredit());
         st.setInt(7, 0);
+        st.setInt(8, 0);
     }
 
     @Override

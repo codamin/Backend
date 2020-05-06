@@ -7,6 +7,7 @@ public class User {
     private String lastName;
     private String phone;
     private String email;
+    private String pass;
     private int credit;
     private OrderRepository orderRepository;
 
@@ -43,6 +44,7 @@ public class User {
         lastName = new String("KhamesPanah");
         phone = new String("09124820194");
         email = new String("ekhamespanah@yahoo.com");
+        pass = new String("admin8585");
         credit = 10000000;
         orderRepository = new OrderRepository();
     }
@@ -85,5 +87,13 @@ public class User {
 
     public void decreaseCredit(int amount) {
         credit -= amount;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 }
