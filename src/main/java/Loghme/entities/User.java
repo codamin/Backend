@@ -7,9 +7,8 @@ public class User {
     private String lastName;
     private String phone;
     private String email;
-    private String pass;
-    private int credit;
     private String password;
+    private int credit;
     private OrderRepository orderRepository;
 
     public User(String _firstName, String _lastName, String _email, String _password, String _phone, Integer _credit) {
@@ -56,17 +55,11 @@ public class User {
         lastName = new String("KhamesPanah");
         phone = new String("09124820194");
         email = new String("ekhamespanah@yahoo.com");
-        pass = new String("admin8585");
+        password = new String("admin8585");
         credit = 10000000;
         orderRepository = new OrderRepository();
     }
 
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
 //    public User() {
 //        firstName = new String("Ehsan");
 //        lastName = new String("KhamesPanah");
@@ -109,11 +102,11 @@ public class User {
         credit -= amount;
     }
 
-    public String getPass() {
-        return pass;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

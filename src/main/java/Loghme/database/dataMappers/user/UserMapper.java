@@ -36,7 +36,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
                 "firstname VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "lastname VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci," +
                 "email VARCHAR(30)," +
-                "password VARCHAR(50)," +
+                "password VARCHAR(585)," +
                 "phone VARCHAR(11)," +
                 "credit INTEGER," +
                 "location_x INTEGER," +
@@ -83,7 +83,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         st.setString(2, user.getLastName());
         st.setString(3, user.getPhone());
         st.setString(4, user.getEmail());
-        st.setString(5, DigestUtils.sha256Hex(user.getPass().getBytes()));
+        st.setString(5, DigestUtils.sha256Hex(user.getPassword().getBytes()));
         st.setInt(6, user.getCredit());
         st.setInt(7, 0);
         st.setInt(8, 0);
