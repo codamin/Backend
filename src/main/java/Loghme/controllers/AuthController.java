@@ -15,7 +15,4 @@ public class AuthController {
     public Token login(@RequestBody Login login) {
         return new Token(AuthService.authUser(login));
     }
-
-
-
 }

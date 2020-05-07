@@ -22,12 +22,11 @@ public class JWTFilter implements Filter {
         String url = request.getRequestURI();
         String method = request.getMethod();
 
-        if(url.equals("/user") && method.equals("POST"))
+        if((url.equals("/user") && method.equals("POST")) || url.equals("/auth/login"))
             chain.doFilter(request, response);
-        else if(url.contains("cart") || url.contains("user")) {
+        else {
             String token = request.getHeader("Authorization");
             if(token == null) {
-                System.out.println("was null");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().println("You have not authorized yet!");
             }
@@ -50,7 +49,5 @@ public class JWTFilter implements Filter {
                 }
             }
         }
-        else
-            chain.doFilter(request, response);
     }
 }
