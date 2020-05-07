@@ -1,6 +1,7 @@
 package Loghme.entities;
 
 import Loghme.exceptions.ForbiddenException;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class User {
     private String firstName;
@@ -55,20 +56,10 @@ public class User {
         lastName = new String("KhamesPanah");
         phone = new String("09124820194");
         email = new String("ekhamespanah@yahoo.com");
-        password = new String("admin8585");
+        password = new String(DigestUtils.sha256Hex("admin".getBytes()));
         credit = 10000000;
         orderRepository = new OrderRepository();
     }
-
-//    public User() {
-//        firstName = new String("Ehsan");
-//        lastName = new String("KhamesPanah");
-//        phone = new String("09124820194");
-//        email = new String("ekhamespanah@yahoo.com");
-//        credit = 10000000;
-//        orderRepository = new OrderRepository();
-
-//    }
 
 
     public String getFirstName() {

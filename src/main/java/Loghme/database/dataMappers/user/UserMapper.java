@@ -83,7 +83,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         st.setString(2, user.getLastName());
         st.setString(3, user.getPhone());
         st.setString(4, user.getEmail());
-        st.setString(5, DigestUtils.sha256Hex(user.getPassword().getBytes()));
+        st.setString(5, user.getPassword());
         st.setInt(6, user.getCredit());
         st.setInt(7, 0);
         st.setInt(8, 0);

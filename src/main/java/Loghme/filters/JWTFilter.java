@@ -33,7 +33,6 @@ public class JWTFilter implements Filter {
             else {
                 String username = JwtUtils.verifyJWT(token);
                 if(username == null) {
-                    System.out.println("username is null");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().println("The JWT token is invalidated!");
                 }
