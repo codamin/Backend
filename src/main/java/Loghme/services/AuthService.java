@@ -1,13 +1,15 @@
 package Loghme.services;
 
-import Loghme.DTOs.Token;
 import Loghme.Utilities.JwtUtils;
 import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.User;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.requests.Login;
+import Loghme.requests.TokenIdLogin;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 
 public class AuthService {
@@ -27,5 +29,9 @@ public class AuthService {
             throw new ForbiddenException("wrong password!!!");
 
         return JwtUtils.createJWT(email);
+    }
+
+    public static String authTokenID(TokenIdLogin tokenIDLogin) throws GeneralSecurityException, IOException {
+        return JwtUtils.verifyTokenId(tokenIDLogin.getTokenId());
     }
 }
