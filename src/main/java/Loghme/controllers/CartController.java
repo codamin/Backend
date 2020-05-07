@@ -20,14 +20,14 @@ import java.sql.SQLException;
 public class CartController {
 
     @GetMapping
-    public OrderDTO getCart() {
-        return CartService.getCart("ekhamespanah@yahoo.com");
+    public OrderDTO getCart(@RequestAttribute("user") String mail) {
+        return CartService.getCart(mail);
     }
 
     @PostMapping()
-    public void addToCart(@RequestBody AddToCart req) {
+    public void addToCart(@RequestBody AddToCart req, @RequestAttribute("user") String mail) {
         try {
-            CartService.addToCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName(), req.getNum());
+            CartService.addToCart(mail, req.getRestaurantId(), req.getFoodName(), req.getNum());
         } catch (SQLException e) {
             System.out.println("error occured in addToCart post request handling");
             throw new ForbiddenException("error occured in addToCart post request handling");
@@ -35,9 +35,9 @@ public class CartController {
     }
 
     @DeleteMapping()
-    public void deleteFromCart(@RequestBody DeleteFromCart req) {
+    public void deleteFromCart(@RequestBody DeleteFromCart req, @RequestAttribute("user") String mail) {
         try {
-            CartService.deleteFromCart("ekhamespanah@yahoo.com", req.getRestaurantId(), req.getFoodName());
+            CartService.deleteFromCart(mail, req.getRestaurantId(), req.getFoodName());
         } catch (SQLException e) {
             System.out.println("error occured in deleteFrom cart delete request handling");
             throw new ForbiddenException("error occured in deleteFrom cart delete request handling");
@@ -45,9 +45,9 @@ public class CartController {
     }
 
     @PostMapping("/finalize")
-    public void finalizeCart() {
+    public void finalizeCart(@RequestAttribute("user") String mail) {
         try {
-            CartService.finalizeCart("ekhamespanah@yahoo.com");
+            CartService.finalizeCart(mail);
         } catch (SQLException e) {
             System.out.println("error occured in finalize cart");
             throw new ForbiddenException("order is not good");

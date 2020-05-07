@@ -16,4 +16,6 @@ public class AuthController {
         return new Token(AuthService.authUser(login));
     }
 
+
+
 }
