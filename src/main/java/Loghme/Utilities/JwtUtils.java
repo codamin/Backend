@@ -48,6 +48,7 @@ public class JwtUtils {
     }
 
     public static String verifyTokenId(String tokenIdString) throws GeneralSecurityException, IOException {
+        System.out.println("start verify token id");
         String CLIENT_ID = "805487349717-mup8qor9qlha42ooq5v45g0nols9g1s4.apps.googleusercontent.com";
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), getDefaultJsonFactory())
             //Specify the CLIENT_ID of the app that accesses the backend:
@@ -55,11 +56,13 @@ public class JwtUtils {
             // Or, if multiple clients access the backend:
             //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
          .build();
-
+        System.out.println("step one");
         // (Receive idTokenString by HTTPS POST)
 
         GoogleIdToken idToken = verifier.verify(tokenIdString);
+        System.out.println("google id token made");
         if (idToken != null) {
+            System.out.println("if");
             Payload payload = idToken.getPayload();
 
             // Print user identifier
