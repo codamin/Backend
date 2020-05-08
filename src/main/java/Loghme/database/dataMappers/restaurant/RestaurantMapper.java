@@ -125,9 +125,11 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         return x;
     }
 
-    public String getFindAllStatement(int page, int items, String userId) throws SQLException {
+    @Override
+    public String getFindAllStatement(int page, int items) throws SQLException {
         String query = "SELECT * FROM restaurant r, user u\n" +
-                "WHERE u.email = " + String.format("'%s'", userId) + " AND\n" +
+                // "WHERE u.email = " + String.format("'%s'", ) + " AND\n" +
+                "WHERE u.email = ? AND\n" +
                 "power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900\n" +
                 "LIMIT " + Integer.toString(items) + " " +
                 "OFFSET " + Integer.toString(items*(page-1));
@@ -183,14 +185,10 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     }
 
     @Override
-    public String getFindAllStatement(int page, int items) throws SQLException {
-        return null;
-    }
-
-    @Override
     public ArrayList<Restaurant> findAll(int page, int items, String userId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindAllStatement(page, items, userId));
+        PreparedStatement st = con.prepareStatement(getFindAllStatement(page, items));
+        st.setString(1, userId);
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {
