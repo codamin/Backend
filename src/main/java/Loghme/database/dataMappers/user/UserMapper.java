@@ -100,15 +100,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         return null;
     }
 
-//    protected User convertResultSetToObject(ResultSet rs) throws SQLException {
-//        String firstname = rs.getString(1);
-//        String lastname = rs.getString(2);
-//        String phone = rs.getString(3);
-//        String email = rs.getString(4);
-//        Integer credit = rs.getInt(5);
-//        User user = new User(firstname, lastname, phone, email, credit);
-//        return user;
-//    }
 
     @Override
     protected User getDAO(ResultSet rs) throws SQLException {

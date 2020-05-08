@@ -17,8 +17,9 @@ public class RestaurantController {
             @RequestParam(value = "restaurantSearch", required = false) String restaurantSearch,
             @RequestParam(value = "foodSearch", required = false) String foodSearch,
             @RequestParam(value = "page") int page,
-            @RequestParam(value = "items") int items) throws SQLException {
-        ArrayList<RestaurantDTO> res = RestaurantService.getRestaurantsList(page, items, restaurantSearch, foodSearch);
+            @RequestParam(value = "items") int items,
+            @RequestAttribute("user") String mail) throws SQLException {
+        ArrayList<RestaurantDTO> res = RestaurantService.getRestaurantsList(page, items, restaurantSearch, foodSearch, mail);
         return res;
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,8 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/tokenIDLogin")
-    public Token tokenLogin(@RequestBody TokenIdLogin tokenIDLogin) throws GeneralSecurityException, IOException {
-        System.out.println("comes to the tocken id controller***********************");
-        return new Token(AuthService.authTokenID(tokenIDLogin));
+    public Token tokenLogin(@RequestBody TokenIdLogin tokenIdLogin) throws GeneralSecurityException, IOException, SQLException {
+        return new Token(AuthService.authTokenID(tokenIdLogin));
     }
 }
