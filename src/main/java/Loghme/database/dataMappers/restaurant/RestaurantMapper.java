@@ -107,7 +107,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     }
 
     public Restaurant find(String id) throws SQLException {
-        System.out.println("restaurant find single called ................................................");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindStatement());
         st.setString(1, id);
@@ -224,7 +223,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     }
 
     public ArrayList<Restaurant> findAll(int page, int items, String userId) throws SQLException {
-        System.out.println("new restuarant find all called...............................................................");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindAllStatement(page, items));
         st.setString(1, userId);
