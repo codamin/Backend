@@ -124,9 +124,10 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                 con.close();
                 return null;
             }
+            Restaurant restaurant = getDAO(resultSet);
             st.close();
             con.close();
-            return getDAO(resultSet);
+            return restaurant;
         } catch (SQLException ex) {
             st.close();
             con.close();

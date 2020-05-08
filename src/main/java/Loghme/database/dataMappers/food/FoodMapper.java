@@ -6,6 +6,7 @@ import Loghme.database.dataMappers.food.party.PartyMapper;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
 import Loghme.entities.Food;
 import Loghme.entities.PartyFood;
+import Loghme.entities.Restaurant;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -76,7 +77,7 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     protected String getFindStatement(Integer id) {
         String query = "SELECT * " +
                 "FROM food \n" +
-                "WHERE id = " + id.toString() + ";";
+                "WHERE id = ?";
         return query;
     }
 
@@ -159,14 +160,17 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
 
     private String getFindStatement(String name, String restaurantId) {
         String query = "SELECT * FROM food WHERE\n" +
-                "name = " + String.format("'%s'", name) + "AND \n" +
-                "restaurantId = " + String.format("'%s'", restaurantId) + ";";
+                "name = ? AND \n" +
+                "restaurantId = ?";
         return query;
     }
 
     public ArrayList<Food> find(String name, String restaurantId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindStatement(name, restaurantId));
+        st.setString(1, name);
+        st.setString(2, restaurantId);
+
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {
@@ -186,29 +190,33 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
         }
     }
 
-    public Food find(int id) throws SQLException {
+    public Food find(Integer id) throws SQLException {
+        System.out.println("restaurant find single called ................................................");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindStatement(id));
+        st.setInt(1, id);
+
+        ResultSet resultSet;
         try {
-            ResultSet resultSet = st.executeQuery();
-            if(resultSet.isClosed()) {
+            resultSet = st.executeQuery();
+            if (resultSet.isClosed()) {
                 st.close();
                 con.close();
                 return null;
             }
-            ArrayList<Food> result = getDAOList(resultSet);
-            st.close();
-            con.close();
-            if(result.size() > 0)
-                return result.get(0);
-            else
+            if(!resultSet.next()) {
+                st.close();
+                con.close();
                 return null;
-        } catch (SQLException e) {
-            System.out.println("error in FoodMapper.findBy id query.");
+            }
+            Food food = getDAO(resultSet);
             st.close();
             con.close();
-            throw e;
+            return food;
+        } catch (SQLException ex) {
+            st.close();
+            con.close();
+            throw ex;
         }
     }
-
 }

@@ -43,18 +43,13 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
     }
 
     @Override
-    protected String getInsertStatement() {
-        return null;
-    }
-
-    @Override
     protected void fillInsertValues(PreparedStatement st, PartyFood obj) throws SQLException {
 
     }
 
     @Override
     protected String getFindStatement(Integer id) {
-        String query = "SELECT * FROM party WHERE id = " + String.valueOf(id) + ";";
+        String query = "SELECT * FROM party WHERE id = ?";
         return query;
     }
 
@@ -110,15 +105,20 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         }
     }
 
-    private String getInsertStatement(int foodId, int oldPrice, int count) {
+    @Override
+    protected String getInsertStatement() {
         String query = "INSERT IGNORE INTO party (id, oldPrice, count, expired)\n" +
-                "VALUES(" + String.valueOf(foodId) + "," + String.valueOf(oldPrice) + "," + String.valueOf(count) + ",False);";
+                "VALUES(?,?,?,False);";
         return query;
     }
     public boolean insert(int foodId, int oldPrice, int count) throws SQLException {
         boolean result;
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getInsertStatement(foodId, oldPrice, count));
+        PreparedStatement st = con.prepareStatement(getInsertStatement());
+        st.setInt(1, foodId);
+        st.setInt(2, oldPrice);
+        st.setInt(3, count);
+
         try {
             result = st.execute();
             st.close();
@@ -152,14 +152,17 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
         }
     }
 
-    private String getDecreaseStatement(int id, int num) {
-        String query = "UPDATE IGNORE party SET count = count - " + String.valueOf(num) + " WHERE id = " + String.valueOf(id) + " ;";
+    private String getDecreaseStatement() {
+        String query = "UPDATE IGNORE party SET count = count - ? WHERE id = ?";
         return query;
     }
     public boolean decrease(int id, int num) throws SQLException {
         boolean result;
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getDecreaseStatement(id, num));
+        PreparedStatement st = con.prepareStatement(getDecreaseStatement());
+        st.setInt(1, num);
+        st.setInt(2, id);
+
         try {
             result = st.execute();
             st.close();
@@ -175,6 +178,7 @@ public class PartyMapper extends Mapper<PartyFood, Integer> implements IPartyMap
     public PartyFood find(int id) throws SQLException {
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindStatement(id));
+        st.setInt(1, id);
         ResultSet rs;
         try {
             rs = st.executeQuery();
