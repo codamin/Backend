@@ -55,8 +55,6 @@ public class HandleFoodPartyPeriodic extends TimerTask {
 
     @Override
     public void run() {
-
-        System.out.println("requesting food party data at = " + System.currentTimeMillis() / 1000);
         String data = null;
         try {
             data = request("http://138.197.181.131:8080/foodparty").replace("menu", "partyMenu");

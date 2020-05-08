@@ -49,7 +49,6 @@ public class HandleDeliveriesPeriodic extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println("requesting for deliveries at time: " + System.currentTimeMillis() / 1000);
         String data = null;
         data = request("http://138.197.181.131:8080/deliveries");
         ArrayList<Delivery> deliveries = getDeliveriesList(data);

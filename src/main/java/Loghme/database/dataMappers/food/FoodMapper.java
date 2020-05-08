@@ -191,7 +191,6 @@ public class FoodMapper extends Mapper<Food, Integer> implements IFoodMapper {
     }
 
     public Food find(Integer id) throws SQLException {
-        System.out.println("restaurant find single called ................................................");
         Connection con = ConnectionPool.getConnection();
         PreparedStatement st = con.prepareStatement(getFindStatement(id));
         st.setInt(1, id);

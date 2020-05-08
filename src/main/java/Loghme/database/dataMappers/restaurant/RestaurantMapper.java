@@ -143,7 +143,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     public String getSearchStatement(int page, int items) {
         String x = "SELECT * " +
                 "FROM restaurant r, user u\n" +
-//                "WHERE r.name LIKE " + "'%" + (restaurantSearch == null ? "" : restaurantSearch.toLowerCase()) +
                 "WHERE r.name LIKE ? " +
                 "AND power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900 \n" +
                 "AND u.email = ?" + "\n" +
@@ -152,7 +151,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
                 "WHERE f.restaurantID = r.id AND f.name LIKE ? )" +
                 "LIMIT " + Integer.toString(items) + " " +
                 "OFFSET " + Integer.toString(items*(page-1));
-        System.out.println("query, "+ x);
         return x;
     }
 

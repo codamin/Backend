@@ -23,8 +23,6 @@ public class AuthController {
 
     @PostMapping("/tokenIDLogin")
     public Token tokenLogin(@RequestBody TokenIdLogin tokenIdLogin) throws GeneralSecurityException, IOException, SQLException {
-        System.out.println("fuck1");
-        System.out.println(tokenIdLogin.getTokenId());
         return new Token(AuthService.authTokenID(tokenIdLogin));
     }
 }
