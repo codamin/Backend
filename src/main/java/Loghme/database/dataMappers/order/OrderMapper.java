@@ -71,19 +71,30 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
     }
 
     @Override
-    protected String getFindAllStatement() throws SQLException {
-        return null;
-    }
-
-    @Override
     protected String getInsertStatement() {
         return "INSERT INTO orders(id, userId, restaurantId, state, remMin, remSec) VALUES(DEFAULT,?,?,?,?,?);";
     }
 
     @Override
     protected String getDeleteStatement(Integer id) {
-        String query = "DELETE FROM orders WHERE id = " + String.valueOf(id) + ";";
+        String query = "DELETE FROM orders WHERE id = ?";
         return query;
+    }
+
+    public void delete(Integer id) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getDeleteStatement(id));
+        st.setInt(1, id);
+        try {
+            st.executeUpdate();
+            st.close();
+            con.close();
+        } catch (SQLException ex) {
+            System.out.println("error in Mapper.delete query.");
+            st.close();
+            con.close();
+            throw ex;
+        }
     }
 
     @Override
@@ -149,16 +160,16 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         }
     }
 
-    private String getCartStatment(String userId) {
+    private String getCartStatment() {
         String query = "SELECT * FROM orders\n" +
-                " WHERE userId = " + String.format("'%s'", userId) + "\n" +
-                " AND state = 'nf';";
+                " WHERE userId = ? AND state = 'nf';";
         return query;
     }
 
     public Order getCart(String userId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getCartStatment(userId));
+        PreparedStatement st = con.prepareStatement(getCartStatment());
+        st.setString(1, userId);
         try {
             ResultSet rs = st.executeQuery();
             if(rs.isClosed()) {
@@ -207,14 +218,17 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         }
     }
 
-    private String getSetStateStatement(int orderId, String state) {
-        String query = "UPDATE IGNORE orders SET state = " + String.format("'%s'", state) + " WHERE id = " + String.valueOf(orderId) + " ;";
+    private String getSetStateStatement() {
+        String query = "UPDATE IGNORE orders SET state = ? WHERE id = ?";
         return query;
 
     }
     public void setState(int orderId, String state) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getSetStateStatement(orderId, state));
+        PreparedStatement st = con.prepareStatement(getSetStateStatement());
+        st.setString(1, state);
+        st.setInt(2, orderId);
+
         try {
             st.executeUpdate();
             st.close();
@@ -271,14 +285,17 @@ public class OrderMapper extends Mapper<Order, Integer> implements IOrderMapper 
         }
     }
 
-    private String getFindAllStatement(String userId) {
-        String query = "SELECT * FROM orders WHERE userId = " + String.format("'%s'", userId) + " AND state <> 'nf';";
+    @Override
+    protected String getFindAllStatement() {
+        String query = "SELECT * FROM orders WHERE userId = ? AND state <> 'nf';";
         return query;
     }
 
     public ArrayList<Order> findAll(String userId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindAllStatement(userId));
+        PreparedStatement st = con.prepareStatement(getFindAllStatement());
+        st.setString(1, userId);
+
         try {
             ResultSet rs = st.executeQuery();
             if(rs.isClosed()) {

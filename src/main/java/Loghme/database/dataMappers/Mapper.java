@@ -35,11 +35,6 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
 
 
     public T find(I id) throws SQLException {
-
-        T result = loadedMap.get(id);
-        if (result != null)
-            return result;
-
         try (Connection con = ConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getFindStatement(id))
         ) {

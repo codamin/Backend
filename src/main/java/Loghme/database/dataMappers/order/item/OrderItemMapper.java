@@ -49,14 +49,17 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         con.close();
     }
 
-    private String getDeleteStatement(int orderId, int foodId) {
-        String query = "DELETE FROM orderItem WHERE orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
+    private String getDeleteStatement() {
+        String query = "DELETE FROM orderItem WHERE orderId = ? AND foodId = ?";
         return query;
     }
 
     private boolean delete(int orderId, int foodId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getDeleteStatement(orderId, foodId));
+        PreparedStatement st = con.prepareStatement(getDeleteStatement());
+        st.setInt(1, orderId);
+        st.setInt(2, foodId);
+
         try {
             int result = st.executeUpdate();
             if(result <= 0) {
@@ -82,11 +85,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
 
     @Override
     protected String getFindStatement(Integer id) {
-        return null;
-    }
-
-    @Override
-    protected String getFindAllStatement() throws SQLException {
         return null;
     }
 
@@ -140,24 +138,21 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
     @Override
     public boolean insert(OrderItem orderItem) throws SQLException {
         boolean result = false;
-//        Connection con = ConnectionPool.getConnection();
-//        PreparedStatement st = con.prepareStatement(getInsertStatement());
-//        fillInsertValues(st, orderItem);
-//        result = st.execute();
-//        st.close();
-//        con.close();
         return result;
     }
 
-    private String getFindStatement(int orderId, int foodId) {
+    private String getFindStatement() {
         String query = "SELECT * FROM orderItem WHERE\n" +
-                "orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
+                "orderId = ? AND foodId = ?";
         return query;
     }
 
     private OrderItem find(int orderId, int foodId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindStatement(orderId, foodId));
+        PreparedStatement st = con.prepareStatement(getFindStatement());
+        st.setInt(1, orderId);
+        st.setInt(2, foodId);
+
         try {
             ResultSet rs = st.executeQuery();
             if(rs.isClosed()) {
@@ -184,23 +179,48 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         return query;
     }
 
-    private String getChangeAmountStatement(int orderId, int foodId, int number) {
-        String query = "UPDATE orderItem SET num = num + "
-                + String.valueOf(number) + " WHERE orderId = "
-                + String.valueOf(orderId) + " AND foodId = "
-                + String.valueOf(foodId) + ";";
+    private String getChangeAmountStatement() {
+        String query = "UPDATE orderItem SET num = num + ? "
+                +" WHERE orderId = ?"
+                +" AND foodId = ?";
         return query;
     }
 
-    private String getGetNubmerStatement(int orderId, int foodId) {
-        String query = "SELECT num FROM orderItem WHERE orderId = " + String.valueOf(orderId) + " AND foodId = " + String.valueOf(foodId) + ";";
+    private boolean changeNumber(int orderId, int foodId, int number) throws SQLException {
+        boolean result;
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getChangeAmountStatement());
+        st.setInt(1, number);
+        st.setInt(2, orderId);
+        st.setInt(3, foodId);
+
+        try {
+            result = st.execute();
+            st.close();
+            con.close();
+            if(number < 0) {
+                handleDeleteFromCart(orderId, foodId);
+            }
+            return result;
+        } catch(SQLException e) {
+            st.close();
+            con.close();
+            throw e;
+        }
+    }
+
+    private String getGetNubmerStatement() {
+        String query = "SELECT num FROM orderItem WHERE orderId = ? AND foodId = ?";
         return query;
     }
 
     private int getNumber(int orderId, int foodId) throws SQLException {
         int resp = 0;
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getGetNubmerStatement(orderId, foodId));
+        PreparedStatement st = con.prepareStatement(getGetNubmerStatement());
+        st.setInt(1, orderId);
+        st.setInt(2, foodId);
+
         try {
             ResultSet rs = st.executeQuery();
             if(rs.next()) {
@@ -229,25 +249,6 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         return true;
     }
 
-    private boolean changeNumber(int orderId, int foodId, int number) throws SQLException {
-        boolean result;
-        Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getChangeAmountStatement(orderId, foodId, number));
-        try {
-            result = st.execute();
-            st.close();
-            con.close();
-            if(number < 0) {
-                handleDeleteFromCart(orderId, foodId);
-            }
-            return result;
-        } catch(SQLException e) {
-            st.close();
-            con.close();
-            throw e;
-        }
-    }
-
     public boolean insert(int orderId, int foodId, int number) throws SQLException {
         boolean result;
         OrderItem item = find(orderId, foodId);
@@ -269,14 +270,17 @@ public class OrderItemMapper extends Mapper<OrderItem, Integer> implements IOrde
         }
     }
 
-    private String getFindAllStatement(int orderId) {
-        String query = "SELECT * FROM orderItem WHERE orderId = " + String.valueOf(orderId) + ";";
+    @Override
+    protected String getFindAllStatement() {
+        String query = "SELECT * FROM orderItem WHERE orderId = ? ";
         return query;
     }
 
     public ArrayList<OrderItem> findAll(int orderId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindAllStatement(orderId));
+        PreparedStatement st = con.prepareStatement(getFindAllStatement());
+        st.setInt(1, orderId);
+
         try {
             ResultSet rs = st.executeQuery();
             if(rs.isClosed()) {
