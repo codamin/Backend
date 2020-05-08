@@ -40,7 +40,6 @@ public class JWTFilter implements Filter {
                     try {
                         User user = UserMapper.getInstance().find(username);
                         request.setAttribute("user", user.getEmail());
-
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }

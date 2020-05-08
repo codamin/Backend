@@ -17,18 +17,20 @@ public class AuthService {
         if(login.getEmail() == null || login.getPassword() == null) {
             throw new ForbiddenException("both fields should not be empty to authenticate");
         }
-        String email = login.getEmail();
-        String pass = login.getPassword();
         User foundUser = null;
         try {
-            foundUser = UserMapper.getInstance().find(email);
+            foundUser = UserMapper.getInstance().find(login.getEmail());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(!foundUser.getPassword().equals(DigestUtils.sha256Hex(login.getPassword().getBytes())))
-            throw new ForbiddenException("wrong password!!!");
+        if(foundUser == null) {
+            return null;
+        }
 
-        return JwtUtils.createJWT(email);
+        if(foundUser.getPassword().equals(DigestUtils.sha256Hex(login.getPassword().getBytes())))
+            return JwtUtils.createJWT(foundUser.getEmail());
+        else
+            throw new ForbiddenException("wrong password!!!");
     }
 
     public static String authTokenID(TokenIdLogin tokenIDLogin) throws GeneralSecurityException, IOException {

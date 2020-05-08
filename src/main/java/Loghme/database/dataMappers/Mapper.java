@@ -45,7 +45,8 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
-                resultSet.next();
+                if(!resultSet.next())
+                    return null;
                 return getDAO(resultSet);
             } catch (SQLException ex) {
                 throw ex;
