@@ -75,9 +75,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         }
     }
 
-    public ArrayList<Restaurant> search(int page, int items, String restaurantSearch, String foodSearch) throws SQLException {
+    public ArrayList<Restaurant> search(int page, int items, String restaurantSearch, String foodSearch, String userId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getSearchStatement(page, items, restaurantSearch, foodSearch, "ekhamespanah@yahoo.com"));
+        PreparedStatement st = con.prepareStatement(getSearchStatement(page, items, restaurantSearch, foodSearch, userId));
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {
@@ -109,11 +109,11 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
         return null;
     }
 
-//    @Override
     public String getSearchStatement(int page, int items, String restaurantSearch, String foodSearch, String userId) {
         String x = "SELECT * " +
                 "FROM restaurant r, user u\n" +
-                "WHERE r.name LIKE " + "'%" + (restaurantSearch == null ? "" : restaurantSearch.toLowerCase()) + "%' AND power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900 \n" +
+                "WHERE r.name LIKE " + "'%" + (restaurantSearch == null ? "" : restaurantSearch.toLowerCase()) +
+                "%' AND power(r.location_x - u.location_x,2) + power(r.location_y - u.location_y,2) <= 28900 \n" +
                 "AND u.email = " + String.format("'%s'", userId) + "\n" +
                 "AND EXISTS(SELECT * " +
                 "FROM food f " +
@@ -188,9 +188,9 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     }
 
     @Override
-    public ArrayList<Restaurant> findAll(int page, int items) throws SQLException {
+    public ArrayList<Restaurant> findAll(int page, int items, String userId) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getFindAllStatement(page, items, "ekhamespanah@yahoo.com"));
+        PreparedStatement st = con.prepareStatement(getFindAllStatement(page, items, userId));
         try {
             ResultSet resultSet = st.executeQuery();
             if (resultSet.isClosed()) {

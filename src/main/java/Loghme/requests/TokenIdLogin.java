@@ -2,13 +2,13 @@ package Loghme.requests;
 
 public class TokenIdLogin {
     public String getTokenId() {
-        return tockenId;
+        return tokenId;
     }
 
     public void setTokenId(String tokenId) {
-        this.tockenId = tokenId;
+        this.tokenId = tokenId;
     }
 
-    private String tockenId;
+    private String tokenId;
 
 }
