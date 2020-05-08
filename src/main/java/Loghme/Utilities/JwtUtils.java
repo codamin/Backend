@@ -61,13 +61,16 @@ public class JwtUtils {
     }
 
     public static String verifyGoogleTokenId(String tokenIdString) throws GeneralSecurityException, IOException, SQLException {
+        System.out.println("fuck2");
         String CLIENT_ID = "805487349717-belcub0d2g4mrq6mq9dn8sjddf0fhqh6.apps.googleusercontent.com";
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance())
                 .setAudience(Collections.singletonList(CLIENT_ID))
                 .build();
-
+        System.out.println("fuck3");
         GoogleIdToken idToken = verifier.verify(tokenIdString);
+        System.out.println("fuck4");
         if (idToken != null) {
+            System.out.println("fuck null");
             Payload payload = idToken.getPayload();
             String email = payload.getEmail();
             User found_User = UserMapper.getInstance().find(email);

@@ -91,8 +91,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     @Override
     protected String getFindStatement(String id) {
-        String query = "SELECT * FROM user WHERE email = \"" + id + "\";";
-        return query;
+        return null;
     }
 
     private String getFindStatement() {
@@ -131,14 +130,20 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         return null;
     }
 
-    protected String getAddCreditStatment(String id, Integer amount) {
-        String query = "UPDATE IGNORE user SET credit = credit + " + String.valueOf(amount) + " WHERE email = " + String.format("'%s'", id) + ";";
+    protected String getAddCreditStatment() {
+        String query = "UPDATE IGNORE user SET credit = credit + ? WHERE email = ?;";
         return query;
+    }
+
+    private void fillAddCreditStatement(PreparedStatement st, String id, Integer amount) throws SQLException {
+        st.setInt(1, amount);
+        st.setString(2, id);
     }
 
     public void addCredit(String id, int amount) throws SQLException {
         Connection con = ConnectionPool.getConnection();
-        PreparedStatement st = con.prepareStatement(getAddCreditStatment(id, amount));
+        PreparedStatement st = con.prepareStatement(getAddCreditStatment());
+        fillAddCreditStatement(st, id, amount);
         try {
             st.execute();
             st.close();
@@ -150,5 +155,31 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         }
     }
 
-
+    public User find(String email) throws SQLException {
+        Connection con = ConnectionPool.getConnection();
+        PreparedStatement st = con.prepareStatement(getFindStatement());
+        fillFindValues(st, email);
+        try {
+            ResultSet rs = st.executeQuery();
+            if(rs.isClosed()) {
+                st.close();
+                con.close();
+                return null;
+            }
+            if(!rs.next()) {
+                st.close();
+                con.close();
+                return null;
+            }
+            User user = getDAO(rs);
+            st.close();
+            con.close();
+            return user;
+        } catch (SQLException e) {
+            System.out.println("error occured in finding the user with email");
+            st.close();
+            con.close();
+            throw e;
+        }
+    }
 }

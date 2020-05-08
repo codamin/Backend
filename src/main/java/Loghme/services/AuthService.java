@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 
-public class AuthService {
+public class    AuthService {
     public static String authUser(Login login) {
         if(login.getEmail() == null || login.getPassword() == null) {
             throw new ForbiddenException("both fields should not be empty to authenticate");

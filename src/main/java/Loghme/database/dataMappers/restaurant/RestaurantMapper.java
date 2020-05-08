@@ -214,4 +214,6 @@ public class RestaurantMapper extends Mapper<Restaurant, String> implements IRes
     public String getSearchStatement(int page, int items, String restaurantSearch, String foodSearch) {
         return null;
     }
+
+
 }
