@@ -52,9 +52,14 @@ public class HandleDeliveriesPeriodic extends TimerTask {
         String data = null;
         data = request("http://138.197.181.131:8080/deliveries");
         ArrayList<Delivery> deliveries = getDeliveriesList(data);
+        OrderMapper orderMapper = OrderMapper.getInstance();
+        try {
+            orderMapper.setState(order.getId(), "finding delivery");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if(deliveries.size() > 0) {
 
-            OrderMapper orderMapper = OrderMapper.getInstance();
             try {
                 orderMapper.setState(order.getId(), "delivering");
             } catch (SQLException e) {
