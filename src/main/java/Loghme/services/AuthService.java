@@ -35,6 +35,8 @@ public class AuthService {
 
     public static String authTokenID(TokenIdLogin tokenIDLogin) throws GeneralSecurityException, IOException, SQLException {
         String verifiedEmail = JwtUtils.verifyGoogleTokenId(tokenIDLogin.getTokenId());
+        System.out.println("verified email");
+        System.out.println(verifiedEmail);
         if(verifiedEmail != null)
             return JwtUtils.createJWT(verifiedEmail);
         else

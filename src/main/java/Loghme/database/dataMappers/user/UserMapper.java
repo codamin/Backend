@@ -95,6 +95,15 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         return query;
     }
 
+    private String getFindStatement() {
+        String query = "SELECT * FROM user WHERE email = ?;";
+        return query;
+    }
+
+    private void fillFindValues(PreparedStatement st, String id) throws SQLException {
+        st.setString(1, id);
+    }
+
     @Override
     protected String getDeleteStatement(String id) {
         return null;
@@ -140,4 +149,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
             throw e;
         }
     }
+
+
 }

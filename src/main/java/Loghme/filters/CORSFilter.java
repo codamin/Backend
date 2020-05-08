@@ -12,7 +12,7 @@ public class CORSFilter implements Filter {
             throws IOException, ServletException {
 
         try {
-            Thread.sleep(850);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package Loghme.Utilities;
 
 import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.User;
+import Loghme.exceptions.ForbiddenException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -50,6 +51,10 @@ public class JwtUtils {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(jwt).getBody();
+        if(claims.getIssuedAt() == null ||
+            claims.getExpiration()== null ||
+            claims.getIssuer() == null)
+            throw new ForbiddenException("Authorization invalid");
         if (claims.getExpiration().getTime() < System.currentTimeMillis())
             return null;
         return claims.getIssuer();
@@ -66,6 +71,8 @@ public class JwtUtils {
             Payload payload = idToken.getPayload();
             String email = payload.getEmail();
             User found_User = UserMapper.getInstance().find(email);
+            System.out.println("email in utils");
+            System.out.println(email);
             if(found_User!= null)
                 return email;
             else
