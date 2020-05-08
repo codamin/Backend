@@ -17,7 +17,6 @@ import java.util.TimerTask;
 import static Loghme.Utilities.FetchData.request;
 
 public class HandleDeliveriesPeriodic extends TimerTask {
-
     Order order;
 
     public HandleDeliveriesPeriodic(Order order) {
