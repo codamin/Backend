@@ -1,4 +1,4 @@
-package Loghme.requests;
+package Loghme.controllers.requests;
 
 public class TokenIdLogin {
     public String getTokenId() {

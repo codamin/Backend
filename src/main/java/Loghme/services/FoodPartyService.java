@@ -1,6 +1,6 @@
 package Loghme.services;
 
-import Loghme.DTOs.FoodPartyTimerDTO;
+import Loghme.controllers.DTOs.FoodPartyTimerDTO;
 import Loghme.entities.FoodPartyTimer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

@@ -1,7 +1,7 @@
 package Loghme.controllers;
 
 import Loghme.database.dataMappers.food.party.PartyMapper;
-import Loghme.DTOs.FoodPartyTimerDTO;
+import Loghme.controllers.DTOs.FoodPartyTimerDTO;
 import Loghme.entities.FoodPartyTimer;
 import Loghme.entities.PartyFood;
 import Loghme.services.FoodPartyService;

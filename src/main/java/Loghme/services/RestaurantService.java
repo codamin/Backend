@@ -1,14 +1,13 @@
 package Loghme.services;
 
-import Loghme.DTOs.RestaurantDTO;
-import Loghme.DTOs.RestaurantListDTO;
+import Loghme.controllers.DTOs.RestaurantDTO;
+import Loghme.controllers.DTOs.RestaurantListDTO;
 import Loghme.database.dataMappers.restaurant.RestaurantMapper;
 import Loghme.entities.Food;
 import Loghme.entities.Restaurant;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RestaurantService {
 

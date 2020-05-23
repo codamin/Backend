@@ -1,4 +1,4 @@
-package Loghme.DTOs;
+package Loghme.controllers.DTOs;
 
 import Loghme.entities.FoodPartyTimer;
 

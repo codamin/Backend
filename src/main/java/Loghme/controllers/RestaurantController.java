@@ -1,6 +1,6 @@
 package Loghme.controllers;
 
-import Loghme.DTOs.RestaurantDTO;
+import Loghme.controllers.DTOs.RestaurantDTO;
 import Loghme.entities.Restaurant;
 import Loghme.services.RestaurantService;
 import org.springframework.web.bind.annotation.*;

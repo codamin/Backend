@@ -5,8 +5,8 @@ import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.User;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.exceptions.NotFoundException;
-import Loghme.requests.Login;
-import Loghme.requests.TokenIdLogin;
+import Loghme.controllers.requests.Login;
+import Loghme.controllers.requests.TokenIdLogin;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;

@@ -1,13 +1,12 @@
-package Loghme.requests;
+package Loghme.controllers.requests;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 
-public class DeleteFromCart {
+public class AddToCart {
     private String restaurantId;
     private String foodName;
+    private int num;
 
-    public DeleteFromCart() {}
-
+    public AddToCart() {}
 
     public String getRestaurantId() {
         return restaurantId;
@@ -23,5 +22,13 @@ public class DeleteFromCart {
 
     public void setFoodName(String foodName) {
         this.foodName = foodName;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 }

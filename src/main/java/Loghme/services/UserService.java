@@ -3,8 +3,8 @@ package Loghme.services;
 import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.User;
 import Loghme.exceptions.ForbiddenException;
-import Loghme.requests.AddCredit;
-import Loghme.requests.AddUser;
+import Loghme.controllers.requests.AddCredit;
+import Loghme.controllers.requests.AddUser;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.sql.SQLException;

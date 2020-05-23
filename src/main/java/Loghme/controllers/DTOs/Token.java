@@ -1,4 +1,4 @@
-package Loghme.DTOs;
+package Loghme.controllers.DTOs;
 
 public class Token {
     private String jwt;

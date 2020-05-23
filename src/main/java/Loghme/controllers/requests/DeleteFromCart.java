@@ -1,12 +1,11 @@
-package Loghme.requests;
+package Loghme.controllers.requests;
 
-
-public class AddToCart {
+public class DeleteFromCart {
     private String restaurantId;
     private String foodName;
-    private int num;
 
-    public AddToCart() {}
+    public DeleteFromCart() {}
+
 
     public String getRestaurantId() {
         return restaurantId;
@@ -22,13 +21,5 @@ public class AddToCart {
 
     public void setFoodName(String foodName) {
         this.foodName = foodName;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
     }
 }

@@ -1,15 +1,15 @@
 package Loghme.controllers;
 
 //import Loghme.entities.IeatRepository;
-import Loghme.DTOs.OrderDTO;
+import Loghme.controllers.DTOs.OrderDTO;
 import Loghme.entities.Order;
 //import Loghme.entities.OrderItem;
-//import Loghme.requests.AddToCart;
+//import Loghme.controllers.requests.AddToCart;
 import Loghme.exceptions.ForbiddenException;
 import Loghme.exceptions.NotFoundException;
-import Loghme.requests.DeleteFromCart;
+import Loghme.controllers.requests.DeleteFromCart;
 //import Loghme.services.CartService;
-import Loghme.requests.AddToCart;
+import Loghme.controllers.requests.AddToCart;
 import Loghme.services.CartService;
 import org.springframework.web.bind.annotation.*;
 

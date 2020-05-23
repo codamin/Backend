@@ -3,10 +3,9 @@ package Loghme.controllers;
 import Loghme.database.dataMappers.user.UserMapper;
 import Loghme.entities.User;
 import Loghme.exceptions.ForbiddenException;
-import Loghme.requests.AddCredit;
-import Loghme.requests.AddUser;
+import Loghme.controllers.requests.AddCredit;
+import Loghme.controllers.requests.AddUser;
 import Loghme.services.UserService;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 //import sun.awt.FontDescriptor;
 

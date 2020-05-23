@@ -1,7 +1,7 @@
 package Loghme.controllers;
-import Loghme.DTOs.Token;
-import Loghme.requests.Login;
-import Loghme.requests.TokenIdLogin;
+import Loghme.controllers.DTOs.Token;
+import Loghme.controllers.requests.Login;
+import Loghme.controllers.requests.TokenIdLogin;
 import Loghme.services.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

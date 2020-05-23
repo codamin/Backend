@@ -1,11 +1,9 @@
-package Loghme.DTOs;
+package Loghme.controllers.DTOs;
 
 import Loghme.entities.Food;
 import Loghme.entities.Location;
 import Loghme.entities.PartyFood;
 import Loghme.entities.Restaurant;
-
-import java.util.ArrayList;
 
 public class RestaurantDTO {
     public String getId() {

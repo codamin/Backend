@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>Loghme2020</groupId>
-  <artifactId>ca5</artifactId>
+  <artifactId>Loghme-Server</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
@@ -94,7 +94,7 @@
   </dependencies>
 
   <build>
-    <finalName>ca5</finalName>
+    <finalName>Loghme-Server</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
