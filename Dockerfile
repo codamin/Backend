@@ -9,7 +9,7 @@ RUN mvn package
 #################################
 # STAGE TWO: BUILD Tomcat IMAGE #
 #################################
-FROM tomcat:10.0.0-jdk11
-COPY --from=maven-builder /usr/src/app/target/Loghme-Server.war $CATALINA_HOME/webapps/
+FROM tomcat
+COPY --from=maven-builder /usr/src/app/target/Loghme-Server.war $CATALINA_HOME/webapps/ROOT.war
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
