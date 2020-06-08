@@ -1,5 +1,5 @@
 variables:
-  REG_IMAGE: "aminhoseinorg/loghme:latest"
+  REG_IMAGE: "aminhoseinorg/loghme_backend:latest"
 
 stages:
  - build
@@ -10,13 +10,11 @@ docker-build:
   stage: build
   services:
     - docker:dind
-#   before_script:
-    #docker login  
-
+    
   script:
     - docker pull $REG_IMAGE || true
-    - docker build --cache-from $REG_IMAGE -t "BUILT_IMAGE" .
-    - docker tag "BUILT_IMAGE" $REG_IMAGE
+    - docker build --cache-from $REG_IMAGE -t "backend_image" .
+    - docker tag "backend_image" $REG_IMAGE
     - docker push $REG_IMAGE
     
   only:
