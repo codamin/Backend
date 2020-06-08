@@ -1,6 +1,3 @@
-variables:
-  REG_IMAGE: "aminhoseinorg/loghme_backend:latest"
-
 stages:
  - build
  
@@ -13,9 +10,9 @@ docker-build:
     
   script:
     - docker pull aminhoseinorg/loghme_backend:latest || true
-    - docker build --cache-from $REG_IMAGE -t backend_image .
-    - docker tag backend_image $REG_IMAGE
-    - docker push $REG_IMAGE
+    - docker build --cache-from aminhoseinorg/loghme_backend:latest -t backend_image .
+    - docker tag backend_image aminhoseinorg/loghme_backend:latest
+    - docker push aminhoseinorg/loghme_backend:latest
     
   only:
     - master
