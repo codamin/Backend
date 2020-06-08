@@ -1,3 +1,6 @@
+variables:
+ - REG_ADDR: "aminhoseinorg/loghme_backend:latest"
+
 stages:
  - build
  
@@ -7,12 +10,15 @@ docker-build:
   stage: build
   services:
     - docker:dind
+
+before-script:
+    - docker login -u "codamin" -p "mydockeridcodamin"
     
   script:
-    - docker pull aminhoseinorg/loghme_backend:latest || true
-    - docker build --cache-from aminhoseinorg/loghme_backend:latest -t backend_image .
-    - docker tag backend_image aminhoseinorg/loghme_backend:latest
-    - docker push aminhoseinorg/loghme_backend:latest
+    - docker pull $REG_ADDR || true
+    - docker build --cache-from $REG_ADDR -t backend_image .
+    - docker tag backend_image $REG_ADDR
+    - docker push $REG_ADDR
     
   only:
     - master
