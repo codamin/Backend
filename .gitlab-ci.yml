@@ -1,5 +1,5 @@
 variables:
- REG_ADDR: "aminhoseinorg/loghme_backend:latest"
+  REG_ADDR: "aminhoseinorg/loghme_backend:latest"
 
 stages:
  - build
@@ -11,9 +11,9 @@ docker-build:
   services:
     - docker:dind
 
-  before-script:
+  before_script:
     - docker login -u "codamin" -p "mydockeridcodamin"
-    
+
   script:
     - docker pull $REG_ADDR || true
     - docker build --cache-from $REG_ADDR -t backend_image .
