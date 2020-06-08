@@ -16,7 +16,7 @@ public class ConnectionPool {
             System.out.println("error occured in getting class for name jdbc.Driver");
         }
 
-        connectionPool.setJdbcUrl("jdbc:mysql://localhost:3306/Loghme?useSSL=false&useUnicode=true&" +
+        connectionPool.setJdbcUrl("jdbc:mysql://mysql:3306/Loghme?useSSL=false&useUnicode=true&" +
                 "characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
         connectionPool.setUser("ie");
         connectionPool.setPassword("iePass@2020");
