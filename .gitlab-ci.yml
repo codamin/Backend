@@ -1,5 +1,5 @@
 variables:
-  REGISTRY_NAME: "aminhoseinorg/loghme"
+  IMAGE_NAME: "aminhoseinorg/loghme"
   TAG: "latest"
   
 stages:
@@ -16,7 +16,7 @@ docker-build:
 
   script:
     - docker pull $IMAGE_NAME:$TAG || true
-    - docker build --cache-from $IMAGE_NAME:$TAG --tag $IMAGE_NAME:$TAG .
+    - docker build --cache-from $IMAGE_NAME:$TAG -t $IMAGE_NAME:$TAG .
     - docker tag $IMAGE_NAME:$TAG $REGISTRY_NAME:$TAG
     - docker push $IMAGE_NAME:$TAG
     
