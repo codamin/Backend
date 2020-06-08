@@ -12,9 +12,9 @@ docker-build:
     - docker:dind
     
   script:
-    - docker pull $REG_IMAGE || true
-    - docker build --cache-from $REG_IMAGE -t "backend_image" .
-    - docker tag "backend_image" $REG_IMAGE
+    - docker pull aminhoseinorg/loghme_backend:latest || true
+    - docker build --cache-from $REG_IMAGE -t backend_image .
+    - docker tag backend_image $REG_IMAGE
     - docker push $REG_IMAGE
     
   only:
