@@ -1,7 +1,6 @@
 variables:
-  IMAGE_NAME: "aminhoseinorg/loghme"
-  TAG: "latest"
-  
+  REG_IMAGE: "aminhoseinorg/loghme:latest"
+
 stages:
  - build
  
@@ -15,10 +14,10 @@ docker-build:
     #docker login  
 
   script:
-    - docker pull $IMAGE_NAME:$TAG || true
-    - docker build --cache-from $IMAGE_NAME:$TAG -t $IMAGE_NAME:$TAG .
-    - docker tag $IMAGE_NAME:$TAG $IMAGE_NAME:$TAG
-    - docker push $IMAGE_NAME:$TAG
+    - docker pull $REG_IMAGE || true
+    - docker build --cache-from $REG_IMAGE -t "BUILT_IMAGE" .
+    - docker tag "BUILT_IMAGE" $REG_IMAGE
+    - docker push $REG_IMAGE
     
   only:
     - master
