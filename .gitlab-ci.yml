@@ -11,7 +11,7 @@ docker-build:
   services:
     - docker:dind
 
-before-script:
+  before-script:
     - docker login -u "codamin" -p "mydockeridcodamin"
     
   script:
