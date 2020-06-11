@@ -2,29 +2,29 @@ stages:
   - build
   - deploy
   
-  docker-build:
-    variables:
-      REG_ADDR: "aminhoseinorg/loghme-backend:latest"
-    image: docker:latest
-    stage: build
-    services:
-      - docker:dind
-    before_script:
-      - docker login -u "codamin" -p "mydockeridcodamin"
-    script:
-      - docker pull $REG_ADDR || true
-      - docker build --cache-from $REG_ADDR -t backend_image .
-      - docker tag backend_image $REG_ADDR
-      - docker push $REG_ADDR
-    only:
-      - master
-  
-  kuber-deploy:
-    tags:
-      - local
-    stage: deploy
-    script:
-      - kubectl set image deployment/loghme-backend loghme-backend=aminhoseinorg/loghme-backend
-  
-    only:
-      - master
+docker-build:
+  variables:
+    REG_ADDR: "aminhoseinorg/loghme-backend:latest"
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "codamin" -p "mydockeridcodamin"
+  script:
+    - docker pull $REG_ADDR || true
+    - docker build --cache-from $REG_ADDR -t backend_image .
+    - docker tag backend_image $REG_ADDR
+    - docker push $REG_ADDR
+  only:
+    - master
+
+kuber-deploy:
+  tags:
+    - local
+  stage: deploy
+  script:
+    - kubectl set image deployment/loghme-backend loghme-backend=aminhoseinorg/loghme-backend
+
+  only:
+    - master
