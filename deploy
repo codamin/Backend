@@ -1,0 +1,34 @@
+kubectl delete --all deployments && kubectl delete --all pods && kubectl delete --all services
+kubectl delete --all persistentVolumeClaims
+
+
+kubectl get deployments && kubectl get pods && kubectl get services
+
+kubectl describe quota
+
+kubectl apply -f loghme-db.yaml && kubectl apply -f loghme-back.yaml && kubectl apply -f loghme-front.yaml
+
+
+sudo docker build -t loghme-back:latest .
+
+kubectl create secret generic mysql-root-pass --from-literal=password=8585
+kubectl create secret generic mysql-user-pass --from-literal=username=ie --from-literal=password=iePass@2020
+kubectl create secret generic mysql-db-url --from-literal=database=Loghme --from-literal=url='jdbc:mysql://loghme-mysql:3306/Loghme?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
+
+back : 185.166.105.6:31885
+front: 185.166.105.6:31085
+
+kubectl exec -it loghme-backend-b6d84b5c5-4czm6 -- /bin/bash
+mysql -u root -p
+USE Loghme;
+CREATE USER 'ie'@'%' IDENTIFIED BY 'iePass@2020';
+GRANT ALL PRIVILEGES ON *.* TO 'ie'@'%' WITH GRANT OPTION;
+
+kubectl delete deployment loghme-backend
+kubectl delete service loghme-backend
+kubectl delete deployment loghme-frontend
+kubectl delete service loghme-frontend
+kubectl delete deployment loghme-mysql
+kubectl delete service loghme-mysql
+
+kubectl set image deployment/loghme-frontend loghme-frontend=aminhoseinorg/loghme-frontend --record
