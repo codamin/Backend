@@ -24,7 +24,7 @@ stages:
       - local
     stage: deploy
     script:
-      - kubectl set image deployment/loghme-backend loghme-frontend=aminhoseinorg/loghme-backend
+      - kubectl set image deployment/loghme-backend loghme-backend=aminhoseinorg/loghme-backend
   
     only:
       - master
