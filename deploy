@@ -13,7 +13,7 @@ sudo docker build -t loghme-back:latest .
 
 kubectl create secret generic mysql-root-pass --from-literal=password=8585
 kubectl create secret generic mysql-user-pass --from-literal=username=ie --from-literal=password=iePass@2020
-kubectl create secret generic mysql-db-url --from-literal=database=Loghme --from-literal=url='jdbc:mysql://loghme-mysql:3306/Loghme?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
+kubectl create secret generic mysql-db-url --from-literal=database=Loghme --from-literal=url='jdbc:mysql://loghme-mysql:3306/Loghme?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
 
 back : 185.166.105.6:31885
 front: 185.166.105.6:31085
