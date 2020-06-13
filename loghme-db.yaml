@@ -10,7 +10,7 @@ spec:                              # Access mode and resource limits
     - ReadWriteOnce                # ReadWriteOnce means the volume can be mounted as read-write by a single Node
   resources:
     requests:
-      storage: 300Mi
+      storage: 250Mi
 ---
 apiVersion: v1                    # API version
 kind: Service                     # Type of kubernetes resource 
